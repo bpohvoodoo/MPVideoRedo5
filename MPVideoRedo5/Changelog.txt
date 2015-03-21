@@ -1,0 +1,183 @@
+﻿----- Version 9.5.0 -----
+* Portierung zu VideoRedo5
+* hat nun eigene Settingsdatei (mpvideredo5.xml)
+* ComSkip Marker können geladen werden (über AktionsMenu), Sicherheitsfrage in Settings einstellbar
+* ComSkip Marker können gespeichert werden (AktionsMenu), Sicherheitsfrage in Settings einstellbar
+* MovieStripBar zeigt nun auch ausgeschnittene Bereiche an (transparentes rotes Overlay)
+* Player kann beim Start nun in Pause gesetzt werden, in den Einstellungen wählbar
+* Schnitte werden im Aufnahmeverzeichnis als Projekt als .mpvr5 gespeichert, Sicherheitsfrage in Settings einstellbar
+* Schnitte werden beim Start geladen, falls .mpvr5 Datei vorhanden, Sicherheitsfrage in Settings einstellbar
+* Schnitte als Projekt laden und speichern ist auch über das Aktionsmenü möglich.
+* Automatische Erkennung einer Aufnahme als Serienfolge, wenn Episodeninformationen verfügbar. Der Button wird dem entsprechend gesetzt.
+* Ändern der Start- bzw. End-Cutmarker einer Szene, über ContextMenü Schnitte
+* Endmarker kann nun auch vor dem Startmarker liegen, die Positionen werden dann automatisch getauscht.
+*
+* Diverse kleine Bugs und Ungenauigkeiten beseitigt
+*
+* Bekannte Probleme:
+* AdScan schneidet nicht automatisch, da der Parameter nicht korrekt übergeben wird (BUG in Videoredo5)
+* Abbruch beim  Filme Speichern ist nicht möglich, das der Status von VideoRedo5 nicht korekt zurückgegeben wird (BUG in Videoredo5)
+* interner ThumbnailsCreator.vb arbeitet nicht korrekt bei SD Material.
+* Textlänge in der Virtuellen Tastatur ist zu begrenzt.* 
+*
+* ToDo:
+* Exception abfangen, falls TV Server nicht verfügbar
+* Automatische Erkennung des Aufnahme-Verzeichnisses
+* Löschen der Aufnahmen auch aus der TV Server Datenbak
+* Speichen mit Originalname (Speichen mit temporärem Namen und dann Löschen der Orginaldatei und Umbenennen der temporären Datei)
+* internen Thumbnailer möglicher Weise gegen ffmpeg tauschen (s.o, mal sehen)
+
+
+----- Version 9.1.3 -----
+* Bug beseitigt:
+* Fehler wenn Verzeichnis für Cache nicht vorhanden. Wird nun angelegt.
+* Diverse Kleinigkeiten.
+*
+* Bekannte Probleme:
+* interner ThumbnailsCreator.vb arbeitet nicht korrekt bei SD Material.
+* Textlänge in der Virtuellen Tastatur ist zu begrenzt.
+* 
+*
+* ToDo:
+* Automatische Erkennung einer Aufnahme als Serienfolge, wenn Episodeninformationen verfügbar.
+* Exception abfangen, falls TV Server nicht verfügbar
+* Löschen der Aufnahmen auch aus der TV Server Datenbak
+* Ändern der Cutmarker einer Szene
+* Speichen mit Originalname (Speichen mit temporärem Namen und dann Löschen der Orginaldatei und Umbenennen der temporären Datei)
+* internen Thumbnailer möglicher Weise gegen ffmpeg tauschen (s.o, mal sehen)
+* laden von Cutlists (ComSkip) (mal sehen)
+* Speichern in Cutlists (mal sehen)
+* TVServer wachhalten (wichtig für Clientbetrieb) -- Kann jetzt der TVServer ist somit obsolet.
+
+
+
+----- Version 9.1.2 -----
+22.03.2014
+* Bug beseitigt:
+* in MP 1.6  wurde bei Pause immer wieder Play gesetzt
+*
+* Bekannte Probleme:
+* interner ThumbnailsCreator.vb arbeitet nicht korrekt bei SD Material.
+* Textlänge in der Virtuellen Tastatur ist zu begrenzt.
+* 
+*
+* ToDo:
+* Automatische Erkennung einer Aufnahme als Serienfolge, wenn Episodeninformationen verfügbar.
+* TVServer wachhalten (wichtig für Clientbetrieb)
+* Exception abfangen, falls TV Server nicht verfügbar
+* Löschen der Aufnahmen auch aus der TV Server Datenbak
+* Ändern der Cutmarker einer Szene
+* Speichen mit Originalname (Speichen mit temporärem Namen und dann Löschen der Orginaldatei und Umbenennen der temporären Datei)
+* internen Thumbnailer möglicher Weise gegen ffmpeg tauschen (s.o, mal sehen)
+* laden von Cutlists (ComSkip) (mal sehen)
+* Speichern in Cutlists (mal sehen)
+
+
+
+----- Version 9.1.1 -----
+22.03.2014
+* Speicherfortschritt umgestellt auf DialogMenu
+* Schnitte werden nun auch wärend des laufenden AdScans aktualisiert
+* Unter Einstellungen kann jetzt die Aktualisierung für den Fimstreifen (auch wenn nicht im Pause Modus) aktiviert werden, die erforder mehr Leistung!
+* mit der Taste 8 kann nun die letze Szene vor/unter der aktuellen Position gelöscht werden
+* mit der Taste * kann nun die vorige Sprungmarke angewählt werden
+* mit der Taste # kann nun die nächste Sprungmarke angewählt werden
+* Anzeige VRD konform auf von Millisekunden auf Frames umgestellt
+* #CurrentFrame (Standbilder) Funktionalität gefixed und in die Skins eingefügt
+*
+* Bug beseitigt:
+* g_player wurde am Ende des Videos beeendet. Nun geht er 1 Sekunde vor Ende in Pause.
+* wenn der Abstand zum Anfang/Ende kleiner als die Sprungmarke, dann sprang das Plugin in die andere Richtung
+* Fehler in der Frame/Milisekunden Umrechnung behoben.
+* Anzeige ist nun 100% konform zur VRD (Frame links vom Schnittmarker im Filmstreifen ist der #Currentframe)
+* Schnitte wurden bei Auswahl des Menüpunktes aus dem Contextmenü nicht sauber gelöscht.
+* Schnitte wurden nach dem AdScan Lauf nicht in die Listcontrol geladen.
+* Diverse weiter kleinere Bugfixes.
+*
+* Bekannte Probleme:
+* interner ThumbnailsCreator.vb arbeitet nicht korrekt bei SD Material.
+* Textlänge in der Virtuellen Tastatur ist zu begrenzt.
+* 
+*
+* ToDo:
+* Automatische Erkennung einer Aufnahme als Serienfolge, wenn Episodeninformationen verfügbar.
+* TVServer wachhalten (wichtig für Clientbetrieb)
+* Exception abfangen, falls TV Server nicht verfügbar
+* Löschen der Aufnahmen auch aus der TV Server Datenbak
+* Ändern der Cutmarker einer Szene
+* Speichen mit Originalname (Speichen mit temporärem Namen und dann Löschen der Orginaldatei und Umbenennen der temporären Datei)
+* internen Thumbnailer möglicher Weise gegen ffmpeg tauschen (s.o, mal sehen)
+* laden von Cutlists (ComSkip) (mal sehen)
+* Speichern in Cutlists (mal sehen)
+
+
+----- Version 9.1.0 -----
+05.03.2014
+* Umgestellt auf die Benutzung von Thumbs des TVServers, falls vorhanden. Fallback bleibt weiterhin der interne ThumbnailCreator
+* Schnitte Löschen Dialog beim Verlassen über Settings abschaltbar
+* Originaldatei Löschen Dialog nach dem Schneiden über Settings abschaltbar
+* Modul Name für die Menüs kann nun über Settings gesetzt werden (fall einem MPVideoRedo5 nicht gefällt)
+* Möglichkeit der Speicherung in Unterordner auch für Serien in den Setting hinzugefügt
+* Entsprechende Übersetzungen hinzugefügt
+* Angefangen die Debugmeldung und anderes im Code auf Englisch zu Übersetzen, damit das Projekt ggf. internationaler wird.
+* Code Cleanup 
+* 
+* Bug beseitigt: Textfeld in der virtuellen Tastatur wurde beim Ändern des Speichernamens nicht gefüllt
+*
+* Bekannte Probleme:
+* interner ThumbnailsCreator.vb arbeitet nicht korrekt bei SD Material.
+* Textlänge in der Virtuellen Tastatur ist zu begrenzt.
+* 
+* ToDo:
+* Speichen mit Originalname (Speichen mit temporärem Namen und dann Löschen der Orginaldatei und Umbenennen der temporären Datei)
+* internen Thumbnailer möglicher Weise gegen ffmpeg tauschen (s.o, mal sehen)
+* laden von Cutlists (ComSkip) (mal sehen)
+* Speichern in Cutlists (mal sehen)
+
+----- Version 9.0.3 -----
+19.02.2014
+* Umstellung auf .NET 4.0
+* dlls von MP Aktualisiert auf 1.6.0.0
+* StreamedMP Skin Files hinzugefügt
+* Profil Details können auch im Saving Screen korrekt abgerufen werden.
+* Variable #itemcount für Skins eingebaut
+* Profilbestätigungsdialog beim Ändern über Settings abschaltbar
+* redoFolder.png redoHarddisk.png redoback.png von Skinfiles entfernt und auf default Icons in den Listviews umgestellt
+* Sprachdateien angepasst und erweitert.
+*
+* Bug beseitigt: Mediaportal Absturz, wenn ungülige Zeichen im Titel der Aufnahme war z.B. ":" bei CSI: Vegas
+* Bug beseitigt: MPVideoRedo5 erstellte keine Thumbnails, wenn ungülige Zeichen im Titel der Aufnahme war z.B. ":" bei CSI: Vegas
+*
+* Bekannte Probleme:
+* ThumbnailsCreator.vb arbeitet nicht korrekt bei SD Material
+* OrdnerIcons werden in den Listviews u.U. nicht korrekt dargestellt (überschrieben)
+
+----- Version 9.0.2 -----
+18.08.2013
+* clsRecordings.vb in GetRecordings()
+
+* Nach einer Warnmeldung das ein Videofile nicht gefunden werden kann wofür es allerdings ein XML 
+gibt wird die schleife der XML Tags verlassen, da unnötig weiter das XML zu untersuchen.
+
+
+
+----- Version 9.0.1 -----
+
+* Prüfung ob die installierte Version von VideoRedo H246 Material unterstützt wurde eingebaut. Bei false wird abgebrochen. (TESTEN)
+* Sprachfiles überarbeitet und vervollständigt.
+* Prüfung auf Nothing des VideoRedo Objekts in PlayerHelper.SetPlayerLabels.vb
+* AudioSyncValue Propertie VideoRedo.vb hinzugefügt.
+* #CurrentFrame Variable eingebaut um Skinnern den aktuellen Frame bereit zu stellen
+* Labels des Profildialogs wurden der Übersetzung und den Sprachfiles hinzugefügt
+
+  <string Field="Encodingtype">Encodierungstyp:</string>
+  <string Field="Filetype">Dateityp:</string>
+  <string Field="Resolution">Auflösung:</string>
+  <string Field="Ratio">Ratio:</string>
+  <string Field="Deinterlacemode">De-Interlace Modus:</string>
+  <string Field="Framerate">Bildrate:</string>
+
+* Nun kann ein eigenes Speicherprofil für HD Material in der config angegeben werden. Dieses wird automatisch verwendet 
+  wenn im Player ein HD Material geladen ist und dieses vom MediaPortal Player auch als H264 Material erkannt wird.
+* Screenfiles überarbeitet und den GUICheckmark auf ein GUICheckbutton geändert. Auch die Screenfiles von Pünktchen.
+* MPVideoRedo5ProfileDialog von alles Screenfiles wurde und die neuen Profilübersetzungen bearbeitet.
