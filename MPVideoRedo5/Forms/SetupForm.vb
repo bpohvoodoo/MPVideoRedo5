@@ -97,7 +97,6 @@ Public Class SetupForm
     End Sub
 
     Private Sub TranslateSetupForm()
-        Translator.TranslateSkin()
         Me.Text = My.Application.Info.Title
         Me.tabCommon1.Text = Translation.GeneralOptions1
         Me.GroupBoxModuleName.Text = Translation.GroupModuleName

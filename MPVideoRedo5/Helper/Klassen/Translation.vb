@@ -12,17 +12,17 @@ Public NotInheritable Class Translation
     Public Shared Abort As String = "Abbruch"
     Public Shared AdDetectiveDone As String = "Der AdDetective Scan wurde abgeschlossen."
     Public Shared AdDetectiveRunning As String = "AdDetective Scan läuft"
-    Public Shared AddReplaceString As String = "Replace-String hinzufügen"
+    Public Shared AddReplaceString As String = "Ersatz-Zeichenkette hinzufügen"
     Public Shared AlwaysSaveProject As String = "Schnitte als Projekt speichern"
-    Public Shared AlwaysKeepOriginalFile As String = "immer die Originaldatei behalten"
+    Public Shared AlwaysKeepOriginalFile As String = "Originaldatei immer behalten"
     Public Shared AlwaysLoadComSkipMarkers As String = "Schnitte aus ComSkip Datei laden"
     Public Shared AlwaysLoadProject As String = "Schnitte aus Projekt Datei laden"
     Public Shared AlwaysRefreshMoviestripThumbs As String = "Filmstreifen Vorschaubilder aktualisieren"
     Public Shared AlwaysRefreshMoviestripThumbsDelay As String = "Wiederholungsintervall"
-    Public Shared AlwaysSaveComSkipMarkers As String = "Speichere Schnitte immer als ComSkip Datei"
+    Public Shared AlwaysSaveComSkipMarkers As String = "Schnitte als ComSkip Datei speichern"
     Public Shared AudioSyncLabel As String = "Nachsyncronisierung der Audiospur:"
-    Public Shared AudioSyncLabelContext As String = "Audiospur syncronisieren umschalten"
-    Public Shared AutoEndCutLabel As String = "Endmarker automatisch setzen wenn nötig"
+    Public Shared AudioSyncLabelContext As String = "Audiospur syncronisieren"
+    Public Shared AutoEndCutLabel As String = "Endmarker automatisch setzen"
 
     ' B
     Public Shared ButtonCheckVRD As String = "Auf VRD 5 prüfen..."
@@ -32,41 +32,41 @@ Public NotInheritable Class Translation
     Public Shared CalculateTimeLeft As String = "Berechne die Restzeit"
     Public Shared CalculatedTimeLeft As String = "Voraussichtliche Restzeit: "
     Public Shared ChangeCut As String = "Neue Position"
-    Public Shared ChooseSeries As String = "Wähle die Serie aus..."
-    Public Shared ClearCutlist As String = "Lösche alle Cut`s"
+    Public Shared ChooseSeries As String = "Wähle die Serie aus"
+    Public Shared ClearCutlist As String = "Lösche alle Schnitte"
     Public Shared ClearCutsAtClose As String = "Schnitte verwerfen"
     Public Shared ClearCutsAtClose1 As String = "Wollen Sie die Schnitte verwerfen?"
     Public Shared CloseVRD As String = "VideoRedo schließen"
     Public Shared CloseVRD1 As String = "Möchten Sie auch VideoRedo"
     Public Shared CloseVRD2 As String = "schliessen? Alle ungespeicherten"
-    Public Shared CloseVRD3 As String = "Schnitte gehen verloren?"
+    Public Shared CloseVRD3 As String = "Schnitte gehen verloren!"
     Public Shared Complete As String = "Abgeschlossen"
     Public Shared ConfigureSeekSteps As String = "Spulsprünge Konfigurieren"
-    Public Shared ContinueScan As String = "Continue scan?"
-    Public Shared ContinueScan1 As String = "Continue the scan in the background?"
+    Public Shared ContinueScan As String = "Weiterscannen?"
+    Public Shared ContinueScan1 As String = "Im Hintergrund weiterscannen?"
     Public Shared CreateMovieSubfolder As String = "Erstelle Unterordner für Filme"
     Public Shared CreateSeriesSubfolder As String = "Erstelle Unterordner für Serien"
     Public Shared CutContextMenu As String = "Schnittmenü"
     Public Shared CutContextChange As String = "Gewählten Schnitt ändern"
-    Public Shared CutContextDelete As String = "Gewählte Szene löschen"
+    Public Shared CutContextDelete As String = "Gewählte Schnitt löschen"
     Public Shared CutContextJumpTo As String = "Springe zum gewählten Marker"
 
     ' D
     Public Shared DebugMode As String = "Debug Modus"
-    Public Shared DeleteOriginalFile As String = "Möchten Sie das Originalfile löschen?"
-    Public Shared DeleteOriginalFileTitle As String = "Original löschen?"
-    Public Shared DelReplaceString As String = "Ausgewählten String entfernen"
-    Public Shared DescriptionRecPathDialog As String = "Wähle den Ordner der gespeicherten Aufnahmen"
-    Public Shared DescriptionSavePathDialog As String = "Wähle den Ordner in dem die geschnittenen Videos gespeichert werden sollen."
-    Public Shared DescriptionVRDProfiles As String = "Wenn VRD 5 auf Ihrem System aktiv ist, können Sie hier das Standardprofil für die Konvertierung auswählen. Wenn dies der Fall ist wird eine Profile Liste erzeugt. Klicken Sie auf den Button um zu prüfen, ob die VRD 5 Anwendung aktiv ist und warten Sie einen Moment bis Sie die Profile auswählen können. Die Details des Profile werden dann angezeigt."
     Public Shared Deinterlacemode As String = "De-Interlace Modus:"
+    Public Shared DeleteOriginalFile As String = "Möchten Sie die Originaldatei löschen?"
+    Public Shared DeleteOriginalFileTitle As String = "Original löschen"
+    Public Shared DelReplaceString As String = "Ausgewählte Zeichenkette entfernen"
+    Public Shared DescriptionRecPathDialog As String = "Wählen Sie den Ordner der gespeicherten Aufnahmen"
+    Public Shared DescriptionSavePathDialog As String = "Wählen Sie den Ordner in dem die geschnittenen Videos gespeichert werden sollen."
+    Public Shared DescriptionVRDProfiles As String = "Wenn VRD 5 auf Ihrem System aktiv ist, können Sie hier das Standardprofil für die Konvertierung auswählen. Wenn dies der Fall ist wird eine Profile Liste erzeugt. Klicken Sie auf den Button um zu prüfen, ob die VRD 5 Anwendung aktiv ist und warten Sie einen Moment bis Sie die Profile auswählen können. Die Details des Profile werden dann angezeigt."
     Public Shared DisableProfileDetails As String = "Profil Bestätigung deaktivieren"
     Public Shared Done As String = "Fertig"
     Public Shared Duration As String = "Gesamtlaufzeit:{0}"
 
     ' E
-    Public Shared EditEndFilename As String = "End-Dateinamen bearbeiten"
-    Public Shared EditReplacementString As String = "Replacement-Strings bearbeiten"
+    Public Shared EditEndFilename As String = "Speicher-Dateiname bearbeiten"
+    Public Shared EditReplacementString As String = "Ersatz-Zeichenketten bearbeiten"
     Public Shared EditVideo As String = "Schneiden"
     Public Shared Encodingtype As String = "Encodierungstyp:"
     Public Shared EpisodeFound As String = "Episode gefunden"
@@ -74,11 +74,11 @@ Public NotInheritable Class Translation
     Public Shared ErrorOccured As String = "Fehler"
 
     ' F
+    Public Shared Filetype As String = "Dateityp:"
     Public Shared FollowEpisodeWasFound As String = "Folgende Episode wurde gefunden. Verwenden?"
+    Public Shared ForbiddenCutCompleteVideo As String = "Es ist nicht möglich das ganze Video auszuschneiden!"
     Public Shared Forward As String = "Vorspulen"
     Public Shared ForwardStep As String = "Vor"
-    Public Shared ForbiddenCutCompleteVideo As String = "Es ist nicht möglich das ganze Video zu beschneiden!!"
-    Public Shared Filetype As String = "Dateityp:"
     Public Shared Framerate As String = "Bildrate:"
     Public Shared Frames As String = "Bilder"
 
@@ -111,7 +111,6 @@ Public NotInheritable Class Translation
     Public Shared HelpParseSeriesFile As String = "Konfigurieren Sie Dateinamen nach Ihren Wünschen. Mit klick auf den Button rechts können sie die möglichen Optionen sehen"
     Public Shared HelpPauseOnStart As String = "Wenn diese Option aktiviert ist wird die Wiedergabe sofort nach dem Laden pausiert."
     Public Shared HelpDisableProfileDetails As String = "Wenn diese Option aktiviert ist wird die Sicherheitsfrage, ob sie das Profil auswählen wollen, unterdrückt und das Profil direkt ausgewäht."
-    Public Shared HowHandleVideo As String = "Was ist das für ein Video?"
 
     ' I
     Public Shared IdentifiedEpisode As String = "Gefundene Episode:"
@@ -122,7 +121,7 @@ Public NotInheritable Class Translation
 
     ' L
     Public Shared LoadComSkipMarkers As String = "ComSkip Marker Laden"
-    Public Shared LoadComSkipMarkers1 As String = "Willen Sie die ComSkip Marker laden?"
+    Public Shared LoadComSkipMarkers1 As String = "Wollen Sie die ComSkip Marker laden?"
     Public Shared LoadComSkipMarkers3 As String = "Die ComSkip Marker wurden geladen."
     Public Shared LoadProjectMarkers As String = "Projektdatei Laden"
     Public Shared LoadProjectMarkers1 As String = "Willen Sie die Projekt-Datei laden?"
@@ -143,14 +142,14 @@ Public NotInheritable Class Translation
     ' N
     Public Shared NewFilename As String = "Neuer Dateiname"
     Public Shared NoEndmarker As String = "Kein Endmarker"
-    Public Shared NoEpisodesFoundDialog As String = "Es wurde keine Episode gefunden. Es wird normal gespeichert..."
+    Public Shared NoEpisodesFoundDialog As String = "Es wurde keine Episode gefunden."
     Public Shared NoRecordingsAviable As String = "Keine Aufnahmen vorhanden. Abbruch"
     Public Shared NoSeriesFoundDialog As String = "Für die Serie wurde nichts gefunden. Es wird normal gespeichert..."
     Public Shared NothingFound As String = "Nichts gefunden"
     Public Shared NothingToSave As String = "Es gibt nichts zu speichern"
 
     ' O
-    Public Shared optionsCutBars As String = "Progressbaroptionen"
+    Public Shared optionsCutBars As String = "Fortschrittsbalken-Optionen"
     Public Shared OriginalString As String = "Orig. Zeichenkette"
 
     ' P
@@ -167,7 +166,7 @@ Public NotInheritable Class Translation
     ' R
     Public Shared Ratio As String = "Verhältnis:"
     Public Shared RecordingDialogDescription As String = "Ordner der gespeicherten Aufnahmen"
-    Public Shared RecordingPathIncorrect As String = "Ungültiger Pfad zu den Aufnahmen, bitte öffne die Configuration!!"
+    Public Shared RecordingPathIncorrect As String = "Aufnahmepfad ist falsch. Bitte die Konfig prüfen!"
     Public Shared ReplacementString As String = "Ersatz Zeichenkette"
     Public Shared Resolution As String = "Auflösung:"
     Public Shared Rewind As String = "Zurückspulen"
@@ -176,10 +175,10 @@ Public NotInheritable Class Translation
     ' S
     Public Shared SaveCuttedVideo As String = "Speichere Video mit Schnitten..."
     Public Shared SaveComSkipMarkers As String = "ComSkip Marker speichern"
-    Public Shared SaveComSkipMarkers1 As String = "Willen Sie die ComSkip Marker speichern?"
+    Public Shared SaveComSkipMarkers1 As String = "Wollen Sie die ComSkip Marker speichern?"
     Public Shared SaveComSkipMarkers3 As String = "Die ComSkip Marker wurden gespeichert."
     Public Shared SaveComSkipMarkers4 As String = "Fehler beim Speichern der ComSkip Marker."
-    Public Shared SaveDialogDescription As String = "Ordner wo die Filme gespeichert werden sollen"
+    Public Shared SaveDialogDescription As String = "Ordner in dem die Filme gespeichert werden sollen"
     Public Shared SaveHere As String = "Hier speichern"
     Public Shared SaveProgressLabel As String = "Speichern zu {0}% abgeschlossen"
     Public Shared SaveProjectMarkers As String = "Projekt speichern"
@@ -193,9 +192,9 @@ Public NotInheritable Class Translation
     Public Shared SearchWithAnotherString As String = "Suche mit anderer Zeichenfolge"
     Public Shared Seconds As String = "Sek."
     Public Shared SelRecording As String = "Wähle Sie eine Aufnahme"
-    Public Shared ShowFileParserStrings As String = "Zeige Strings"
+    Public Shared ShowFileParserStrings As String = "Zeige Variablen"
     Public Shared StartAdDetectiveScan As String = "Starte AdDetective-Scan"
-    Public Shared StartCutAtStart As String = "Startmarker beim Abspielen setzten"
+    Public Shared StartCutAtStart As String = "Autom. Startmarker setzten"
     Public Shared [Step] As String = "Sprung {0}"
 
     ' T
@@ -206,10 +205,10 @@ Public NotInheritable Class Translation
     ' U
     Public Shared Unknown As String = "Unbekannt"
     Public Shared UserAbortDialog As String = "Benutzerabbruch - Es wird normal gespeichert..."
-    Public Shared UseVideoAsSeries As String = "Ist eine Serienfolge"
+    Public Shared UseVideoAsSeries As String = "ist Serienfolge"
 
     ' V
-    Public Shared VideoRedoNotCompatible As String = "Deine Version von VideoRedo ist nicht kompatibel, es wird abgebrochen."
+    Public Shared VideoRedoNotCompatible As String = "Ihre Version von VideoRedo ist nicht kompatibel, es wird abgebrochen."
 
     ' W
 

@@ -341,17 +341,6 @@
             <label>#MPVideoRedo5.Translation.IdentifiedEpisode</label>
         </control>
 
-        <control>
-            <id>17</id>
-            <description>For Debugging Only</description>
-            <type>label</type>
-            <visible>False</visible>
-            <posX>-1000</posX>
-            <posY>-1000</posY>
-            <label>#RecordingNewFilename</label>
-        </control>
-
-
         <import>common.time.xml</import>
         <import>common.overlay.xml</import>
 

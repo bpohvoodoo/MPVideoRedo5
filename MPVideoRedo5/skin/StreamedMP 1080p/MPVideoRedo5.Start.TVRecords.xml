@@ -6,6 +6,7 @@
       <description>GROUP: RecentlyAdded RecordedTV 1</description>
       <type>group</type>
       <dimColor>0xffffffff</dimColor>
+      <visible>[string.equals(#latestMediaHandler.tvrecordings.latest.enabled,true)]</visible>
       <animation effect="fade" time="500">WindowOpen</animation>
       <animation effect="fade" time="500">WindowClose</animation>
       <control>
@@ -48,7 +49,7 @@
         <id>0</id>
         <posX>1380</posX>
         <posY>135</posY>
-        <label>#fanarthandler.tvrecordings.latest1.title</label>
+        <label>#latestMediaHandler.tvrecordings.latest1.title</label>
         <textcolor>White</textcolor>
         <font>mediastream10tc</font>
         <scrollStartDelaySec>20</scrollStartDelaySec>
@@ -60,17 +61,10 @@
         <posX>1380</posX>
         <posY>160</posY>
         <width>385</width>
-        <label>#StreamedMP.RecordedOn #fanarthandler.tvrecordings.latest1.dateAdded</label>
+        <label>#StreamedMP.RecordedOn #latestMediaHandler.tvrecordings.latest1.dateAdded</label>
         <font>mediastream10c</font>
         <textcolor>White</textcolor>
       </control>
-    </control>
-    <control>
-      <description>GROUP: RecentlyAdded RecordedTV 2</description>
-      <type>group</type>
-      <dimColor>0xffffffff</dimColor>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
       <control>
         <description>RecordedTV 2 title</description>
         <type>label</type>
@@ -78,7 +72,7 @@
         <posX>1380</posX>
         <posY>190</posY>
         <width>387</width>
-        <label>#fanarthandler.tvrecordings.latest2.title</label>
+        <label>#latestMediaHandler.tvrecordings.latest2.title</label>
         <font>mediastream10tc</font>
         <textcolor>White</textcolor>
         <scrollStartDelaySec>20</scrollStartDelaySec>
@@ -90,17 +84,10 @@
         <posX>1380</posX>
         <posY>215</posY>
         <width>385</width>
-        <label>#StreamedMP.RecordedOn #fanarthandler.tvrecordings.latest2.dateAdded</label>
+        <label>#StreamedMP.RecordedOn #latestMediaHandler.tvrecordings.latest2.dateAdded</label>
         <font>mediastream10c</font>
         <textcolor>White</textcolor>
       </control>
-    </control>
-    <control>
-      <description>GROUP: RecentlyAdded RecordedTV 3</description>
-      <type>group</type>
-      <dimColor>0xffffffff</dimColor>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
       <control>
         <description>RecordedTV 3 title</description>
         <type>label</type>
@@ -108,7 +95,7 @@
         <posX>1380</posX>
         <posY>245</posY>
         <width>387</width>
-        <label>#fanarthandler.tvrecordings.latest3.title</label>
+        <label>#latestMediaHandler.tvrecordings.latest3.title</label>
         <textcolor>White</textcolor>
         <font>mediastream10tc</font>
         <scrollStartDelaySec>20</scrollStartDelaySec>
@@ -120,11 +107,10 @@
         <posX>1380</posX>
         <posY>270</posY>
         <width>385</width>
-        <label>#StreamedMP.RecordedOn #fanarthandler.tvrecordings.latest3.dateAdded</label>
+        <label>#StreamedMP.RecordedOn #latestMediaHandler.tvrecordings.latest3.dateAdded</label>
         <font>mediastream10c</font>
         <textcolor>White</textcolor>
       </control>
     </control>
   </controls>
 </window>
-<!--Checksum:52b65b41e423a1feecb5289cc6faf92d-->

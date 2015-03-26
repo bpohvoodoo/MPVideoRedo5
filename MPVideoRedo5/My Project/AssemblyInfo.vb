@@ -23,7 +23,7 @@ Imports MediaPortal.Common.Utils
 <Assembly: ComVisible(False)> 
 
 'Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
-<Assembly: Guid("371E2AAB-3668-4422-B5C9-989E483CF01F")> 
+<Assembly: Guid("d608e3da-59a1-45c1-8e54-36cb7fa1a182")> 
 
 ' Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
 '

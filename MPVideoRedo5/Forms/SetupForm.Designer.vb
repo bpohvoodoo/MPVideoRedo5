@@ -278,7 +278,7 @@ Partial Class SetupForm
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(610, 24)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "MPVideoReDo5 0.9.2.0"
+        Me.Label1.Text = "MPVideoReDo5  -  0.9.5.0"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'SplitContainer2

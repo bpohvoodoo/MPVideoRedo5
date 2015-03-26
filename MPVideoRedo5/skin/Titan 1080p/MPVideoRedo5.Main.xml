@@ -1,25 +1,26 @@
-﻿<window>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--version="1.0" encoding="utf-8"-->
+<window>
   <id>1209</id>
   <defaultcontrol>4</defaultcontrol>
   <allowoverlay>no</allowoverlay>
-  <define>#header.label:#currentmodule</define>
-  
+  <define>#header.label:#currentmodule</define> 
   <controls>
     <import>common.time.xml</import> 
     <!--!!!!!! The Bar-Properties are Case-Sensitive !!!!!!-->
     <!--Start Cutbar-Properties
-    Left=-140;Top=25;Height=45;Width=1018;
-    LineMarkerForeground=True;LinemarkerColor=Yellow;LineMarkerThickness=2;
+    Left=0;Top=20;Height=26;Width=1018;
+    LinemarkerColor=Yellow;LineMarkerThickness=2;
     DarkBackColor=DarkGreen;LightBackColor=Green;
     DarkFillColor=DarkRed;LightFillColor=Red
     End Cutbar-Properties-->
     <!--Start MoviestripBar-Properties
-    Left=-140;Top=80;Height=172;Width=1018;
+    Left=0;Top=60;Height=105;Width=1018;
     LineMarkerForeground=False;LinemarkerColor=Red;LineMarkerThickness=10;
-    DarkBackColor=Green;LightBackColor=Green;
+    DarkBackColor=DarkGreen;LightBackColor=Green;
     DarkFillColor=DarkRed;LightFillColor=Red;
     Opacity=50;
-    ThumbnailsCount=6 
+    ThumbnailsCount=10 
     End MoviestripBar-Properties-->
     <control>
       <description>BG</description>
@@ -30,7 +31,6 @@
       <height>1080</height>
       <colordiffuse>90ffffff</colordiffuse>
     </control>
-
     <control>
       <id>0</id>
       <description>VIEWPORT</description>
@@ -43,7 +43,6 @@
       <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
-
     <control>
       <id>0</id>
       <type>image</type>
@@ -55,25 +54,23 @@
       <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
-
     <control>
       <type>videowindow</type>
       <description>video window</description>
       <id>44</id>
-      <posX>240</posX>
-      <posY>215</posY>
-      <width>733</width>
-      <height>412</height>
+      <posX>90</posX>
+      <posY>219</posY>
+      <width>1018</width>
+      <height>500</height>
       <colordiffuse>ffffffff</colordiffuse>
       <keepaspectratio>yes</keepaspectratio>
       <visible>!control.hasfocus(999)+!control.isvisible(29)</visible>
       <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
-
     <control>
-      <description>listcontrol mit den Cuts</description>
       <type>listcontrol</type>
+      <description>Cutlist Control</description>
       <id>51</id>
       <dimColor>ffffffff</dimColor>
       <posX>1165</posX>
@@ -97,30 +94,29 @@
       <spinPosY>930</spinPosY>
       <spinCanFocus>no</spinCanFocus>
     </control>
-
     <control>
       <type>label</type>
-      <id>45</id>
+      <id>0</id>
       <description>Audiosync Label</description>
-      <posX>1200</posX>
-      <posY>500</posY>
-      <width>400</width>
+      <posX>90</posX>
+      <posY>750</posY>
+      <width>1018</width>
       <label>#MPVideoRedo5.Translation.AudioSyncLabel</label>
       <font>font10</font>
-      <align>right</align>
+      <align>center</align>
       <visible>control.isvisible(46)</visible>
     </control>
     <control>
       <description>Audio Sync Slider</description>
       <type>slider</type>
       <id>46</id>
-      <posX>1220</posX>
-      <posY>500</posY>
+      <posX>190</posX>
+      <posY>800</posY>
       <spintype>int</spintype>
       <showrange>yes</showrange>
-      <textureSliderBar>sliderbackground.png</textureSliderBar>
-      <textureSliderNib>slidernibnf.png</textureSliderNib>
-      <textureSliderNibFocus>slidernibfo.png</textureSliderNibFocus>
+      <textureSliderBar>osd_slider_bg.png</textureSliderBar>
+      <textureSliderNib>osd_slider_nibNF.png</textureSliderNib>
+      <textureSliderNibFocus>osd_slider_nibFO.png</textureSliderNibFocus>
       <onup>51</onup>
       <ondown>4</ondown>
       <onleft></onleft>
@@ -161,7 +157,7 @@
     <control>
       <type>label</type>
       <description>VideoTimeLeft</description>
-      <posX>1840</posX>
+      <posX>1820</posX>
       <posY>995</posY>
       <width>450</width>
       <label>#MPVideoRedo5.Translation.TimeLeft</label>
@@ -172,7 +168,6 @@
       <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
-
     <control>
       <type>button</type>
       <description>Make Cut</description>
@@ -189,12 +184,9 @@
       <label>#MPVideoRedo5.Translation.MakeCut</label>
       <textalign>CENTER</textalign>
       <textvalign>middle</textvalign>
-      <visible>!window.isactive(1210)</visible>
       <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
-
-
     <control>
       <type>button</type>
       <description>Save Video</description>
@@ -218,7 +210,7 @@
 
     <control>
       <type>button</type>
-      <description>Tastenbelegung</description>
+      <description>Keys</description>
       <id>999</id>
       <posX>925</posX>
       <posY>905</posY>
@@ -238,10 +230,10 @@
       <id>27</id>
       <description>Image Help</description>
       <type>image</type>
-      <posX>240</posX>
-      <posY>215</posY>
-      <width>733</width>
-      <height>412</height>
+      <posX>90</posX>
+      <posY>219</posY>
+      <width>1018</width>
+      <height>500</height>
       <align>center</align>
       <valign>middle</valign>
       <keepaspectratio>yes</keepaspectratio>
@@ -253,10 +245,10 @@
       <id>29</id>
       <description>StillImage</description>
       <type>image</type>
-      <posX>240</posX>
-      <posY>215</posY>
-      <width>733</width>
-      <height>412</height>
+      <posX>90</posX>
+      <posY>219</posY>
+      <width>1018</width>
+      <height>500</height>
       <align>center</align>
       <valign>middle</valign>
       <keepaspectratio>yes</keepaspectratio>

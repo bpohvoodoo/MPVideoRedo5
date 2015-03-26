@@ -3,21 +3,21 @@
 <!-- Note: German is the fallback for any strings not found in other languages -->
 <strings>
 
-  
-  
-  
-  
-  
+
+
+
+
+
   <!--A-->
   <string Field="Abort">Abort</string>
-  <string Field="AdDetectiveDone">Finish AdDetective-Scan</string>
+  <string Field="AdDetectiveDone">Finished AdDetective-Scan</string>
   <string Field="AdDetectiveRunning">AdDetective-Scan is running</string>
-  <string Field="AddReplaceString">Add Replace String</string>
-  <string Field="AlwaysSaveProject">Keep Cutmarkers</string>
-  <string Field="AlwaysKeepOriginalFile">Keep original file</string>
-  <string Field="AlwaysLoadComSkipmarkers">"Load cuts from ComSkip file</string>
-  <string Field="AlwaysLoadProject">Load cuts from project files</string>
-  <string Field="AlwaysRefreshMoviestripThumbs">Always refresh moviestrip thumbs</string>
+  <string Field="AddReplaceString">Add Replacement String</string>
+  <string Field="AlwaysSaveProject">Save Cutmarkers on exit</string>
+  <string Field="AlwaysKeepOriginalFile">Keep original file on exit</string>
+  <string Field="AlwaysLoadComSkipmarkers">Load cuts from ComSkip file</string>
+  <string Field="AlwaysLoadProject">Load cuts from Project file</string>
+  <string Field="AlwaysRefreshMoviestripThumbs">Refresh moviestrip thumbs</string>
   <string Field="AlwaysRefreshMoviestripThumbsDelay">Recurrence delay</string>
   <string Field="AlwaysSaveComSkipmarkers">Save cuts to ComSkip file</string>
   <string Field="AudioSyncLabel">Resync audioline:</string>
@@ -31,31 +31,32 @@
   <!--C-->
   <string Field="CalculateTimeLeft">Calculating ...</string>
   <string Field="CalculatedTimeLeft">Calculated Time Remaining: </string>
-  <string Field="ChooseSeries">Choose The Series?</string>
-  <string Field="ClearCutlist">Delete all cut`s</string>
-  <string Field="ClearCutsAtClose">Clear cuts?</string>
-  <string Field="ClearCutsAtClose1">Do you like clear the cutlist?</string>
-  <string Field="CloseVRD">Closing VideoRedo!</string>
-  <string Field="CloseVRD1">Do you want to discard</string>
-  <string Field="CloseVRD2">all of your cuts now</string>
-  <string Field="CloseVRD3">on closing VideoRedo?</string>
+  <string Field="ChangeCut">New Position</string>
+  <string Field="ChooseSeries">Choose the Series</string>
+  <string Field="ClearCutlist">Delete all cuts</string>
+  <string Field="ClearCutsAtClose">Clear cuts</string>
+  <string Field="ClearCutsAtClose1">Do you want to clear the cutlist?</string>
+  <string Field="CloseVRD">Closing VideoRedo</string>
+  <string Field="CloseVRD1">Do you want to also close</string>
+  <string Field="CloseVRD2">VideoRedo? All of your unsaved</string>
+  <string Field="CloseVRD3">changes get lost!</string>
   <string Field="Complete">Complete</string>
   <string Field="ConfigureSeekSteps">Configure Seek Steps</string>
-  <string Field="ContinueScan">Continue scan?</string>
+  <string Field="ContinueScan">Continue scan</string>
   <string Field="ContinueScan1">Continue the scan in the background?</string>
   <string Field="CreateMovieSubfolder">Create subfolder for movies</string>
   <string Field="CreateSeriesSubfolder">Create subfolder for series</string>
   <string Field="CutContextMenu">Cut Menu</string>
   <string Field="CutContextChange">Change selected cutmarker</string>
-  <string Field="CutContextDelete">Delete selected scene</string>
-  <string Field="CutContextJumpTo">Jump to selected marker</string>
+  <string Field="CutContextDelete">Delete selected cutmarker</string>
+  <string Field="CutContextJumpTo">Jump to selected cutmarker</string>
 
   <!--D-->
   <string Field="DebugMode">Debug Mode</string>
-  <string Field="Deinterlacemode">Deinterlacemode:</string>
+  <string Field="Deinterlacemode">Deinterlace-Mode:</string>
   <string Field="DeleteOriginalFile">Would you like delete the original videofile?</string>
-  <string Field="DeleteOriginalFileTitle">Delete original?</string>
-  <string Field="DelReplaceString">Delete Selected</string>
+  <string Field="DeleteOriginalFileTitle">Delete original</string>
+  <string Field="DelReplaceString">Delete Selected String</string>
   <string Field="DescriptionRecPathDialog">Choose the path where MP stores your TV recordings</string>
   <string Field="DescriptionSavePathDialog">Choose the path where you want to save your edited videos</string>
   <string Field="DescriptionVRDProfiles">If VRD 5 is active on your system, you are able to choose your default profile settings here. If so a list with the profiles is generated. Please click on the Button to check if VRD 5 is active and wait for a moment. After that you are able to choose your favourite profile and the details of the selected profile are shown.</string>
@@ -64,7 +65,7 @@
   <string Field="Duration">Duration:{0}</string>
 
   <!--E-->
-  <string Field="EditEndFilename">Edit end-filename</string>
+  <string Field="EditEndFilename">Edit saving filename</string>
   <string Field="EditReplacementString">Edit Replacement Strings</string>
   <string Field="EditVideo">Cut it</string>
   <string Field="Encodingtype">Encodingtype:</string>
@@ -90,7 +91,7 @@
   <string Field="GroupCutSettingCaption">Cutter Options</string>
   <string Field="GroupDialogs">Dialog Setting</string>
   <string Field="GroupModuleName">Plugin-Name</string>
-  <string Field="GroupOnPauseCaption">When Paused</string>
+  <string Field="GroupOnPauseCaption">During Pause</string>
   <string Field="GroupOnPlayCaption">During Play</string>
   <string Field="GroupRecordingSettingCaption">Path Settings</string>
   <string Field="GroupStringSettingCaption">Filename/Foldername Settings</string>
@@ -110,7 +111,6 @@
   <string Field="HelpParseSeriesFile">Here you can configure the filename after cutting the video. With click on the right Button you can see the options</string>
   <string Field="HelpPauseOnStart">If this option is on playback will pause after start.</string>
   <string Field="HelpDisableProfileDetails">If this option is on the security question to accept the selected profile is suppressed and the profile is selcted directly.</string>
-  <string Field="HowHandleVideo">What is this Video?</string>
 
   <!--I-->
   <string Field="IdentifiedEpisode">Identified Episode:</string>
@@ -120,13 +120,13 @@
   <!--K-->
 
   <!--L-->
-  <string Field="LoadComSkipMarkers">Load ComSkip Markers</string>
-  <string Field="LoadComSkipMarkers1">Do you want to load the ComSkip Markers?</string>
-  <string Field="LoadComSkipMarkers3">Die ComSkip Marker wurden geladen.</string>
-  <string Field="LoadProjectMarkers">gespeicherte Schnitte Laden</string>
-  <string Field="LoadProjectMarkers1">Willst du die gespeicherten Marker laden?</string>
-  <string Field="LoadProjectMarkers3">Die gespeicherten Schnitte wurden geladen.</string>
-  <string Field="LabelRecordingsPath">MP Recording Path:</string>
+  <string Field="LoadComSkipMarkers">Load ComSkip Marker</string>
+  <string Field="LoadComSkipMarkers1">Do you want to load the ComSkip Marker?</string>
+  <string Field="LoadComSkipMarkers3">ComSkip Marker were loaded.</string>
+  <string Field="LoadProjectMarkers">Load Project File</string>
+  <string Field="LoadProjectMarkers1">Do you want to Load the Project file?</string>
+  <string Field="LoadProjectMarkers3">Project File was loaded.</string>
+  <string Field="LabelRecordingsPath">Recording Path:</string>
   <string Field="LabelSavePath">Save Path:</string>
   <string Field="LoadOtherVideo">Load Video</string>
 
@@ -142,7 +142,7 @@
   <!--N-->
   <string Field="NewFilename">Filename</string>
   <string Field="NoEndmarker">No endmarker</string>
-  <string Field="NoEpisodesFoundDialog">User aborted - Save video as movie</string>
+  <string Field="NoEpisodesFoundDialog">No Episodes found.</string>
   <string Field="NoRecordingsAviable">No Recordings Available. Abort</string>
   <string Field="NoSeriesFoundDialog">Nothing found for this series - Save as movie</string>
   <string Field="NothingFound">Nothing Found</string>
@@ -174,24 +174,25 @@
 
   <!--S-->
   <string Field="SaveCuttedVideo">Save Edited Video</string>
-  <string Field="SaveComSkipMarkers As">Save ComSkip Markers</string>
+  <string Field="SaveComSkipMarkers">Save ComSkip Markers</string>
   <string Field="SaveComSkipMarkers1">Do you want to save the ComSkip Markers?</string>
-  <string Field="SaveComSkipMarkers3">Die ComSkip Marker wurden gespeichert.</string>
-  <string Field="SaveComSkipMarkers4">Die ComSkip Marker wurden gespeichert.</string>
+  <string Field="SaveComSkipMarkers3">ComSkip Marker have been saved.?</string>
+  <string Field="SaveComSkipMarkers4">Error on saving ComSkip file</string>
   <string Field="SaveDialogDescription">Where would you like to save your movies</string>
   <string Field="SaveHere">Save here</string>
   <string Field="SavingProfile">Savingprofile</string>
   <string Field="SaveProgressLabel">Saving Video At {0}%</string>
-  <string Field="SaveProjectMarkers">Schnitte als Projekt speichern</string>
-  <string Field="SaveProjectMarkers1">Willst du die Schnitte als Projekt speichern?</string>
-  <string Field="SaveProjectMarkers3">The Cutsmarkers have been saved.</string>
+  <string Field="SaveProjectMarkers">Save Project</string>
+  <string Field="SaveProjectMarkers1">Do you want to save the Project?</string>
+  <string Field="SaveProjectMarkers3">The Project has been saved.</string>
   <string Field="SaveProjectMarkers4">Error on saving the project.</string>
+  <string Field="SavingPathError">Error in Saving Path</string>
   <string Field="SaveVideo">Save Video</string>
   <string Field="SearchFolder">Search Folder</string>
   <string Field="SearchWithAnotherString">Search with another string</string>
   <string Field="Seconds">Sec.</string>
   <string Field="SelRecording">Select a Recording</string>
-  <string Field="ShowFileParserStrings">Show Strings</string>
+  <string Field="ShowFileParserStrings">Show Wildcards</string>
   <string Field="StartAdDetectiveScan">Start AdDetective-Scan</string>
   <string Field="StartCutAtStart">Automatically Set Start-Cut</string>
   <string Field="Step">Step {0}</string>
@@ -203,7 +204,7 @@
 
   <!--U-->
   <string Field="Unknown">Unknown</string>
-  <string Field="UserAbortDialog">User aborted - Use video as movie</string>
+  <string Field="UserAbortDialog">User aborted</string>
   <string Field="UseVideoAsSeries">Is an episode</string>
 
   <!--V-->

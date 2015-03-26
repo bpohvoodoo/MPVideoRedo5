@@ -22,7 +22,9 @@
       <width>1920</width>
       <height>70</height>
       <texture>imagestreamtitle.png</texture>
-      <animation effect="fade" time="250" delay="0">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      
+    <animation effect="fade" time="250">WindowClose</animation>
       <visible>yes</visible>
     </control>
 	<control>
@@ -37,8 +39,6 @@
       <visible>control.isvisible(10)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
     </control>
 	<control>
 	<description>Page Count Label</description>
@@ -52,8 +52,6 @@
       <visible>control.isvisible(10)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
     </control>
     <control>
       <description>Item Count Background</description>
@@ -98,14 +96,12 @@
       <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <!-- Start List of Files -->	
-    <control>
+	  <control>
       <type>group</type>
       <description>group element</description>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
-	  <control>
+      <control>
        <description>listcontrol</description>
        <type>listcontrol</type>
        <id>10</id>
@@ -128,7 +124,6 @@
        <textYOff2>55</textYOff2>
        <textureHeight>96</textureHeight>
        <font2>mediastream10c</font2>
-       <keepaspectratio>yes</keepaspectratio>
        <spinPosX>1747</spinPosX>
        <spinPosY>1024</spinPosY>
 	     <spinAlign>Right</spinAlign>
@@ -136,22 +131,17 @@
        <textureDown>arrow_round_down_nofocus.png</textureDown>
        <textureUpFocus>arrow_round_up_focus.png</textureUpFocus>
        <textureDownFocus>arrow_round_down_focus.png</textureDownFocus>
-       <spinWidth>75</spinWidth>
+      <spinWidth>75</spinWidth>
        <spinHeight>55</spinHeight>
-       <onleft>21</onleft>
-       <onright>4</onright>
+       <onleft>-</onleft>
+       <onright>-</onright>
+       <onup>-</onup>
+       <ondown>-</ondown>
        <keepaspectratio>yes</keepaspectratio>
      </control>
     </control>
 	  <!-- End List of Files -->
     <!-- Start List of Episodes -->
-    <control>
-      <type>group</type>
-      <description>group element</description>
-      <animation effect="fade" time="250">WindowOpen</animation>
-      <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
 	  <control>
         <id>40</id>
         <type>listcontrol</type>
@@ -171,6 +161,8 @@
         <textureDown>arrow_round_down_nofocus.png</textureDown>
         <textureUpFocus>arrow_round_up_focus.png</textureUpFocus>
         <textureDownFocus>arrow_round_down_focus.png</textureDownFocus>
+        <animation effect="fade" time="250">WindowOpen</animation>
+        <animation effect="fade" time="250">WindowClose</animation>
         <IconXOff>3</IconXOff>
         <IconYOff>15</IconYOff>
         <textXOff>0</textXOff>
@@ -178,7 +170,6 @@
         <itemWidth>30</itemWidth>
         <itemHeight>30</itemHeight>
         <font2>mediastream10c</font2>
-	  </control> -->
     </control>
     <control> <!-- Pagecount for Episodes List -->
       <description>Page Count Background2</description>
@@ -192,8 +183,6 @@
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
     </control>
 	<control>
 	<description>Page Count Label2</description>
@@ -207,8 +196,6 @@
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
     </control> 
 	<!-- End List of Episodes -->
 	<!-- File is Series Episode -->
@@ -222,31 +209,31 @@
       <height>245</height>
       <texture>MPVideoRedo5\MPVideoRedo5\MPVideoRedo5Frame.png</texture>
       <colordiffuse>EEFFFFFF</colordiffuse>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
     </control>
     <control>
-      <id>31</id>
+      <id>0</id>
       <type>label</type>
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
       <posX>225</posX>
       <posY>138</posY>
       <label>#NewSeriesName</label>
       <font>mediastream10tc</font>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <control>
-      <id>31</id>
+      <id>0</id>
       <type>label</type>
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
       <posX>225</posX>
       <posY>105</posY>
       <label>#MPVideoRedo5.Translation.IdentifiedEpisode</label>
       <font>mediastream10tc</font>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <control>
       <description>Index Separator</description>
@@ -258,10 +245,10 @@
       <label>_____________________________________________________________________________________________________________________________________________</label>
       <textcolor>ff808080</textcolor>
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
-	<!-- Series Cover -->
+	  <!-- Series Cover -->
     <control>
       <id>0</id>
       <type>image</type>
@@ -271,13 +258,13 @@
       <width>200</width>
       <height>200</height>
       <texture>#Seriescover</texture>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
 	  <keepaspectratio>yes</keepaspectratio>
     </control>
-	<!--Preview Picture-->
+	  <!--Preview Picture-->
     <control>
-      <id>30</id>
+      <id>0</id>
       <type>image</type>
       <visible>!control.isvisible(51)+!control.isvisible(40)</visible>
       <posX>35</posX>
@@ -285,12 +272,12 @@
       <width>768</width>
       <height>432</height>
       <texture>#RecordingImage</texture>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
-	<!-- Infobox -->
+	  <!-- Infobox -->
     <control>
-      <id>32</id>
+      <id>0</id>
       <description>Summary</description>
       <type>textboxscrollup</type>
       <visible>!control.isvisible(51)+control.isvisible(40)</visible>
@@ -302,12 +289,12 @@
       <seperator>-----------------------------------------------------------------------------------</seperator>
       <font>mediastream10</font>
       <scrollStartDelaySec>#textboxscrolldelay.details</scrollStartDelaySec>
-      <label>#MovingPictures.SelectedMovie.summary</label>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <label>#NewSeriesOverview</label>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <control>
-      <id>11</id>
+      <id>0</id>
       <description>Titel</description>
       <type>label</type>
       <posX>35</posX>
@@ -315,8 +302,8 @@
       <width>768</width>
       <label>#RecordingTitle</label>
       <font>mediastream10c</font>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <control>
       <description>Index Separator</description>
@@ -327,22 +314,22 @@
       <width>768</width>
       <label>_____________________________________________________________________________________________________________________________________________</label>
       <textcolor>ff808080</textcolor>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <control>
-      <id>16</id>
+      <id>0</id>
       <type>label</type>
       <posX>35</posX>
       <posY>890</posY>
       <width>768</width>
       <label>#RecordingEpisodename</label>
       <font>mediastream10c</font>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
     <control>
-      <id>12</id>
+      <id>0</id>
       <description>Genre</description>
       <type>label</type>
       <posX>35</posX>
@@ -350,11 +337,11 @@
       <width>768</width>
       <label>#RecordingGenre</label>
       <font>mediastream10c</font>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
     </control>
-	<!-- ProgressBar Load Animation -->
-    <control> <!-- Used on change to Cut (MPVideoRedo5.xml) -->
+	  <!-- ProgressBar Load Animation -->
+    <control> <!-- Used on change to Cut (MPVideoRedo5.Main.xml) -->
       <id>52</id>
       <type>animation</type>
       <visible>false</visible>
@@ -365,11 +352,11 @@
       <textures>common.waiting.1.png;common.waiting.2.png;common.waiting.3.png;common.waiting.4.png;common.waiting.5.png;common.waiting.6.png;common.waiting.7.png;common.waiting.8.png</textures>
       <Duration>0:0:01.5</Duration>
     </control>
-    <control> <!-- What is this for / When is it used??-->
-      <id>51</id>
+    <control>
+      <id>51</id>  <!-- Used on is Episode -->
       <type>animation</type>
       <visible>false</visible>
-      <posX>429</posX>
+      <posX>858</posX>
       <posY>440</posY>
       <width>235</width>
       <height>36</height>
@@ -382,25 +369,22 @@
       <type>checkbutton</type>
       <onleft>21</onleft>
       <onright>21</onright>
-	  <onup>-</onup>
+	    <onup>-</onup>
       <ondown>-</ondown>
       <posX>140</posX>
       <posY>960</posY>
-	  <width>600</width>
-	  <textalign>LEFT</textalign>
+	    <width>600</width>
+	    <textalign>LEFT</textalign>
       <align>RIGHT</align>
       <font>mediastream10tc</font>
       <label>#MPVideoRedo5.Translation.UseVideoAsSeries</label>
-	  <!--
-	  <textYOff>1</textYOff>
+  	  <textYOff>1</textYOff>
       <scrollStartDelaySec>1</scrollStartDelaySec>
       <scrollWrapString> | </scrollWrapString>
-      -->
     </control>
-	<control Style="skinbutton">
+	  <control Style="skinbutton">
       <id>21</id>
       <type>button</type>
-    <visible>control.isvisible(21)</visible>
       <onleft>4</onleft>
       <onright>4</onright>
       <onup>10</onup>

@@ -8,11 +8,11 @@
         Else
             ApplicationTitle = System.IO.Path.GetFileNameWithoutExtension(My.Application.Info.AssemblyName)
         End If
-        Me.Text = String.Format("Info {0}", ApplicationTitle)
+        Text = String.Format("Info {0}", ApplicationTitle)
      
     End Sub
 
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Me.Close()
+        Close()
     End Sub
 End Class

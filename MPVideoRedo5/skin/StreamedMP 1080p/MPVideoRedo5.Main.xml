@@ -9,19 +9,19 @@
   <define>#header.hover:-</define>
   <define>#useRandomTVSeriesFanart:Yes</define>
   <controls>
-    <import>common.time.xml</import>
+  <import>common.time.xml</import>
 	<import>MPVideoRedo5.Window.xml</import>
     <!--!!!!!! The Bar-Properties are Case-Sensitive !!!!!!-->
     <!--Start Cutbar-Properties
     Left=6;Top=40;Height=26;Width=974;
-    LineMarkerForeground=True;LinemarkerColor=Yellow;LineMarkerThickness=2;
+    LinemarkerColor=Yellow;LineMarkerThickness=2;
     DarkBackColor=DarkGreen;LightBackColor=Green;
     DarkFillColor=DarkRed;LightFillColor=Red
     End Cutbar-Properties-->
     <!--Start MoviestripBar-Properties
     Left=6;Top=80;Height=100;Width=974;
     LineMarkerForeground=False;LinemarkerColor=Red;LineMarkerThickness=6;
-    DarkBackColor=Green;LightBackColor=Green;
+    DarkBackColor=DarkGreen;LightBackColor=Green;
     DarkFillColor=DarkRed;LightFillColor=Red;
     Opacity=50;
     ThumbnailsCount=10 
@@ -36,7 +36,7 @@
       <texture>imagestreamtitle.png</texture>
       <animation effect="fade" time="250" delay="0">WindowClose</animation>
       <visible>yes</visible>
-    </control>
+   </control>
     <control>
       <description>Page Count Background</description>
       <type>image</type>
@@ -49,8 +49,6 @@
       <visible>yes</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
     </control>
 	<control>
 	<description>Page Count Label</description>
@@ -64,8 +62,6 @@
       <visible>yes</visible>
       <animation effect="fade" time="250">WindowOpen</animation>
       <animation effect="fade" time="250">WindowClose</animation>
-      <animation effect="slide" time="150" start="1200,0">WindowOpen</animation>
-      <animation effect="slide" time="250" end="1200,0">WindowClose</animation>
     </control>
     <control>
       <description>Item Count Background</description>
@@ -138,11 +134,9 @@
       <onleft>2</onleft>
       <onright>2</onright>
     </control>
-    
-    <!-- Neu -->
 	<control> 
        <type>label</type> 
-       <id>45</id> 
+       <id>0</id> 
        <description>Audiosync Label</description> 
        <posX>50</posX> 
        <posY>800</posY>
@@ -189,8 +183,8 @@
       <posY>1033</posY>
       <label>#MPVideoRedo5.Translation.Position</label>
       <font>mediastream10c</font>
-	  <visible>!window.isactive(1210)</visible>
-	  <animation effect="Fade" time="250">WindowOpen</animation>
+	    <visible>!window.isactive(1210)</visible>
+	    <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
     
@@ -201,8 +195,8 @@
       <posY>1033</posY>
       <label>#MPVideoRedo5.Translation.TimeLeft</label>
       <font>mediastream10c</font>
-	  <visible>!window.isactive(1210)</visible>
-	  <animation effect="Fade" time="250">WindowOpen</animation>
+	    <visible>!window.isactive(1210)</visible>
+	    <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
 	
@@ -234,12 +228,12 @@
       <textureDown>arrow_round_down_nofocus.png</textureDown>
       <textureUpFocus>arrow_round_up_focus.png</textureUpFocus>
       <textureDownFocus>arrow_round_down_focus.png</textureDownFocus>
-      <animation effect="fade" time="500">WindowOpen</animation>
-      <animation effect="fade" time="500">WindowClose</animation>
+      <animation effect="fade" time="250">WindowOpen</animation>
+      <animation effect="fade" time="250">WindowClose</animation>
       <onleft>999</onleft>
       <onright>23</onright>
       <onup>-</onup>
-      <ondown>23</ondown>
+      <ondown>-</ondown>
 	  <keepaspectratio>yes</keepaspectratio>
     </control>
 	<!-- Buttons -->
@@ -253,23 +247,7 @@
       <onleft>23</onleft>
       <onright>999</onright>
       <label>#MPVideoRedo5.Translation.MakeCut</label>
-	  <textalign>Center</textalign>
-      <font>mediastream10tc</font>
-      <textYOff>1</textYOff>
-      <scrollStartDelaySec>1</scrollStartDelaySec>
-      <scrollWrapString> | </scrollWrapString>
-    </control>
-    <control Style="skinbutton">
-      <type>button</type>
-      <description>Change Cut</description>
-      <id>5</id>
-      <posX>330</posX>
-      <posY>960</posY>
-      <width>370</width>
-      <onleft>23</onleft>
-      <onright>999</onright>
-      <label>#MPVideoRedo5.Translation.ChangeCut</label>
-      <textalign>Center</textalign>
+	    <textalign>Center</textalign>
       <font>mediastream10tc</font>
       <textYOff>1</textYOff>
       <scrollStartDelaySec>1</scrollStartDelaySec>
@@ -282,16 +260,16 @@
       <posX>700</posX>
       <posY>960</posY>
       <width>50</width>
-	  <height>50</height>
-	  <textureFocus>MPVideoRedo5\MPVideoRedo5HelpFocus.png</textureFocus>
+	    <height>50</height>
+	    <textureFocus>MPVideoRedo5\MPVideoRedo5HelpFocus.png</textureFocus>
       <textureNoFocus>MPVideoRedo5\MPVideoRedo5HelpNoFocus.png</textureNoFocus>
       <onleft>4</onleft>
       <onright>23</onright>
-	  <onup>-</onup>
-	  <ondown>-</ondown>
+	    <onup>-</onup>
+	    <ondown>-</ondown>
       <label>-</label>
-	  <visible>!window.isvisible(1210)</visible>
-	  <animation effect="Fade" time="250">WindowOpen</animation>
+	    <visible>!window.isvisible(1210)</visible>
+	    <animation effect="Fade" time="250">WindowOpen</animation>
       <animation effect="Fade" time="250">WindowClose</animation>
     </control>
 	<control Style="skinbutton">
@@ -303,10 +281,10 @@
       <width>390</width>
       <onleft>999</onleft>
       <onright>4</onright>
-	  <onup>51</onup>
-	  <ondown>51</ondown>
+	    <onup>51</onup>
+	    <ondown>51</ondown>
       <label>#MPVideoRedo5.Translation.SaveVideo</label>
-	  <textalign>Center</textalign>
+	    <textalign>Center</textalign>
       <font>mediastream10tc</font>
       <textYOff>1</textYOff>
       <scrollStartDelaySec>1</scrollStartDelaySec>
@@ -320,11 +298,11 @@
       <posY>205</posY>
       <width>986</width>
       <height>555</height>
-    <align>center</align>
-    <valign>middle</valign>
-	  <keepaspectratio>yes</keepaspectratio>
+      <align>center</align>
+      <valign>middle</valign>
+	    <keepaspectratio>yes</keepaspectratio>
       <texture>MPVideoRedo5\MPVideoRedo5Remote.png</texture>
-	  <visible>control.hasfocus(999)</visible>
+	    <visible>control.hasfocus(999)</visible>
     </control>
     <control>
       <id>29</id>
@@ -343,10 +321,10 @@
       <description>Working Animation</description>
       <type>animation</type>
       <id>13</id>
-      <posX>825</posX>
-      <posY>120</posY>
-      <width>144</width>
-      <height>144</height>
+      <posX>858</posX>
+      <posY>440</posY>
+      <width>235</width>
+      <height>36</height>
       <textures>common.waiting.1.png;common.waiting.2.png;common.waiting.3.png;common.waiting.4.png;common.waiting.5.png;common.waiting.6.png;common.waiting.7.png;common.waiting.8.png</textures>
       <Duration>0:0:01.5</Duration>
       <keepaspectratio>yes</keepaspectratio>

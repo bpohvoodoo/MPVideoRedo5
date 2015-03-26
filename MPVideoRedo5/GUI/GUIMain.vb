@@ -17,19 +17,17 @@ Namespace MPVideoRedo5
         Inherits GUIWindow
 
 #Region "SkinControls"
-        <SkinControlAttribute(44)> Protected VideoWindow As GUIVideoControl = Nothing
-        <SkinControlAttribute(45)> Protected lblAudioResync As GUILabelControl = Nothing
-        <SkinControlAttribute(46)> Protected sliderAudioSync As GUISliderControl = Nothing
+        <SkinControlAttribute(44)> Protected imgVideoWindow As GUIVideoControl = Nothing
+        <SkinControlAttribute(46)> Protected sldAudioSync As GUISliderControl = Nothing
         <SkinControlAttribute(23)> Protected btnCutSave As GUIButtonControl = Nothing
         <SkinControlAttribute(24)> Protected btnHelp As GUIButtonControl = Nothing
         <SkinControlAttribute(4)> Protected btnCutMake As GUIButtonControl = Nothing
-        <SkinControlAttribute(5)> Protected btnCutChange As GUIButtonControl = Nothing
-        <SkinControlAttribute(51)> Protected CutList As GUIListControl = Nothing
-        <SkinControlAttribute(71)> Protected CutBarImage As GUIImage = Nothing
-        <SkinControlAttribute(13)> Protected AnimWaiting As GUIAnimation = Nothing
-        <SkinControlAttribute(25)> Protected HelpBackgroundImage As GUIImage = Nothing
+        <SkinControlAttribute(51)> Protected lstCutList As GUIListControl = Nothing
+        <SkinControlAttribute(71)> Protected imgCutBarImage As GUIImage = Nothing
+        <SkinControlAttribute(13)> Protected imgAnimWaiting As GUIAnimation = Nothing
+        <SkinControlAttribute(25)> Protected imgHelpBackgroundImage As GUIImage = Nothing
         <SkinControlAttribute(26)> Protected btnExitHelp As GUIButtonControl = Nothing
-        <SkinControlAttribute(29)> Protected ctlStillImage As GUIImage = Nothing
+        <SkinControlAttribute(29)> Protected imgStillImage As GUIImage = Nothing
 #End Region
 
 #Region "Variablen"
@@ -47,7 +45,7 @@ Namespace MPVideoRedo5
         Private IsLoadingHDContent As Boolean = False
         Dim Props As PropertyCollection
         Dim NoImage As System.Drawing.Image
-        Dim PauseOnStartOnce As Boolean
+        Dim PauseOnStart As Boolean
         Dim ChangeCutMode As Boolean
         Dim ChangeCutModeMarker As Integer
         Dim VRDList As New List(Of Long)
@@ -79,7 +77,6 @@ Namespace MPVideoRedo5
 
         Protected Overrides Sub OnPageLoad()
             MyBase.OnPageLoad()
-            btnCutChange.Visible = False
             If GUIWindowManager.ActiveWindow = GetID Then
                 If VRD.OutputInProgress = True Then
                     'GUIWindowManager.ActivateWindow(enumWindows.GUIstart, True)
@@ -87,8 +84,8 @@ Namespace MPVideoRedo5
                     GUIWindowManager.ActivateWindow(enumWindows.GUISave, True)
                     Exit Sub
                 End If
-                ctlStillImage.RemoveMemoryImageTexture()
-                ctlStillImage.FileName = GUIGraphicsContext.Skin & "\Media\MPVideoRedo5\MPVideoRedo5Working.png"
+                imgStillImage.RemoveMemoryImageTexture()
+                imgStillImage.FileName = GUIGraphicsContext.Skin & "\Media\MPVideoRedo5\MPVideoRedo5Working.png"
                 Logger.DebugM("Set Playerhandler PlayBackStarted, PlayBackChanged, PlayBackEnded and PlayBackStopped")
                 AlwaysRefreshMoviestripThumbs = HelpConfig.GetConfigString(ConfigKey.AlwaysRefreshMoviestripThumbs)
                 tmrDelayRefreshOnSkip.Interval = 1000
@@ -100,7 +97,7 @@ Namespace MPVideoRedo5
                 NoImage = System.Drawing.Image.FromFile(GUIGraphicsContext.Skin & "\Media\MPVideoRedo5\MPVideoRedo5EmptyThumb.png")
                 Props = BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml")
                 ThumbCount = Props("ThumbnailsCount")
-                PauseOnStartOnce = HelpConfig.GetConfigString(ConfigKey.PauseOnStart)
+                PauseOnStart = HelpConfig.GetConfigString(ConfigKey.PauseOnStart)
                 AddHandler g_Player.PlayBackStarted, AddressOf VideoStarted
                 AddHandler g_Player.PlayBackChanged, AddressOf VideoChange
                 AddHandler g_Player.PlayBackEnded, AddressOf VideoEnded
@@ -119,8 +116,8 @@ Namespace MPVideoRedo5
                         CutBarUnload()
                         MoviestripBarUnload()
                         DialogNotify(GetID, 10, Translation.ErrorOccured, Translation.VideoRedoNotCompatible)
-                        MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                        CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                        MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                        CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                         g_Player.Stop()
                         GUIWindowManager.ActivateWindow(GetGUIWindow(enumWindows.GUIstart), True)
                         Exit Sub
@@ -133,7 +130,6 @@ Namespace MPVideoRedo5
                 End If
                 GetProfileDetail(HelpConfig.GetConfigString(ConfigKey.VRDProfile))
                 tmrCheckplayback.Enabled = True
-                tmrRefresh.Enabled = AlwaysRefreshMoviestripThumbs
             End If
         End Sub
 
@@ -141,24 +137,27 @@ Namespace MPVideoRedo5
             If VRD IsNot Nothing Then
                 If VRD.OutputInProgress Then Exit Sub
                 If GUIWindowManager.ActiveWindow = enumWindows.GUIMain Then ' My Window
+                    tmrCheckplayback.Enabled = False
+                    tmrRefresh.Enabled = False
                     CutBarUnload()
                     MoviestripBarUnload()
                     If VRD.AdScanInProgress Then
                         Logger.DebugM("Showing YES/NO Dialog for Aborting the AdDetective Scan...")
-                        If DialogYesNo(GetID, False, Translation.ContinueScan, " ", Translation.ContinueScan1, ) = True Then
+                        If DialogYesNo(GetID, False, Translation.ContinueScan, " ", Translation.ContinueScan1) = True Then
                             Logger.DebugM("Dialog was confirmed. Continuing with AdScanning in background!")
                             'zum Ausgangschirm vor dem Aufruf von MPVideoRedo5 zürckkehren
                             'ToDo
                         Else
                             Logger.DebugM("Scan should be aborted.")
+                            tmrAdScan.Stop()
+                            tmrAdScan.Enabled = False
                             VRD.AbortScan()
                             Do While VRD.AdScanInProgress
                             Loop
                             Logger.DebugM("Scan was aborted!")
+                            Threading.Thread.Sleep(1000)
                         End If
                     End If
-                    tmrCheckplayback.Enabled = False
-                    tmrRefresh.Enabled = False
                     g_Player.Stop()
                     If new_windowId < GetID Then
                         If VRD.AdScanInProgress = False And VRD.CutMarkerList.Count > 1 Then
@@ -200,12 +199,11 @@ Namespace MPVideoRedo5
             Dim skipOnPause As Long
             If AktWinId = GetID Then
                 Try
-                    Logger.DebugM("Keypress on VideoReDo Screen. KeyChar={0} ; KeyCode={1} ; Actiontype={2}", action.m_key.KeyChar, action.m_key.KeyCode, action.wID.ToString)
+                    'Logger.DebugM("Keypress on VideoReDo Screen. KeyChar={0} ; KeyCode={1} ; Actiontype={2}", action.m_key.KeyChar, action.m_key.KeyCode, action.wID.ToString)
                 Catch
-                    Logger.DebugM("Action on VideoReDo Screen. Action={0}", action.wID.ToString)
+                    'Logger.DebugM("Action on VideoReDo Screen. Action={0}", action.wID.ToString)
                 End Try
                 If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_KEY_PRESSED Then
-
                     If action.m_key IsNot Nothing Then
                         'Button 1
                         If action.m_key.KeyChar = 49 Then
@@ -220,6 +218,11 @@ Namespace MPVideoRedo5
                                 SceneLoad(False, True)
                                 PlayerPosition = VRD.GetCursorTime
                                 GetThumbs(PlayerPosition, ThumbCount)
+                                CutBar.Text = ""
+                                GUIButtonControl.EnableControl(GetID, btnCutMake.GetID)
+                                GUIButtonControl.EnableControl(GetID, btnCutSave.GetID)
+                                GUIListControl.EnableControl(GetID, lstCutList.GetID)
+                                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
                             End If
                         End If
                         'Button 3
@@ -256,7 +259,7 @@ Namespace MPVideoRedo5
                         End If
                         'Button 8
                         If action.m_key.KeyChar = 56 Then
-                            If CutList.Count > 0 Then
+                            If lstCutList.Count > 0 Then
                                 SceneDelete(SkipToMarker(-1, True))
                             End If
                         End If
@@ -287,24 +290,24 @@ Namespace MPVideoRedo5
                 If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_PREVIOUS_MENU Then
 
                     If btnExitHelp IsNot Nothing AndAlso btnExitHelp.Visible = True Then
-                        HelpBackgroundImage.Visible = False
-                        MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                        CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                        imgHelpBackgroundImage.Visible = False
+                        MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                        CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                         GUIControl.FocusControl(GetID, btnHelp.GetID)
                         Exit Sub
                     End If
                 End If
                 'Wenn in der Cutlist was selektiert wird
-                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM And CutList.IsFocused Then
+                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM And lstCutList.IsFocused Then
                     MenuScene()
                 End If
 
-                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM And sliderAudioSync.IsFocused Then
-                    VRD.AudioSyncValue = sliderAudioSync.IntValue
-                    GUIControl.FocusControl(Me.GetID, btnCutMake.GetID)
-                    sliderAudioSync.Visible = False
-                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                    CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM And sldAudioSync.IsFocused Then
+                    VRD.AudioSyncValue = sldAudioSync.IntValue
+                    GUIControl.FocusControl(GetID, btnCutMake.GetID)
+                    sldAudioSync.Visible = False
+                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                    CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                 End If
                 ' ContexMenu
                 If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_CONTEXT_MENU Then
@@ -316,10 +319,11 @@ Namespace MPVideoRedo5
 
         Protected Overrides Sub OnClicked(ByVal controlId As Integer, ByVal control As MediaPortal.GUI.Library.GUIControl, ByVal actionType As MediaPortal.GUI.Library.Action.ActionType)
             If control Is btnCutMake Then
-                SceneSet()
-            End If
-            If control Is btnCutChange Then
-                SceneChange()
+                If ChangeCutMode Then
+                    SceneChange()
+                Else
+                    SceneSet()
+                End If
             End If
             If control Is btnCutSave Then
                 CutBarUnload()
@@ -331,10 +335,13 @@ Namespace MPVideoRedo5
                 MoviestripBarUnload()
                 DialogHelp()
             End If
+            'If control Is lstCutList Then
+            ' MenuScene()
+            'End If
             If control Is btnExitHelp Then
-                HelpBackgroundImage.Visible = False
-                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                imgHelpBackgroundImage.Visible = False
+                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                 GUIControl.FocusControl(GetID, btnHelp.GetID)
             End If
             MyBase.OnClicked(controlId, control, actionType)
@@ -381,22 +388,11 @@ Namespace MPVideoRedo5
                 If g_Player.Paused Then
                     IsPlayerPaused = True
                     tmrRefresh.Enabled = False
-                    'PlayerPosition = PlayerPosition - (5 * (1000 / PlayerFramerate))
-                    If PlayerPosition < 0 Then
-                        PlayerPosition = 0
-                    Else
-                        Logger.DebugM("Player paused at Position: {0} / {1}", g_Player.CurrentPosition, GetPlayerTimeString(g_Player.CurrentPosition * 1000, PlayerFramerate))
-                        Logger.DebugM("Seeking five frames back ({0} ms).", (5 * (1000 / PlayerFramerate)))
-                    End If
-                    If PauseOnStartOnce = False Then
-                        ctlStillImage.Visible = True
-                        GetThumbs(PlayerPosition, ThumbCount)
-                    Else
-                        PauseOnStartOnce = False
-                    End If
+                    imgStillImage.Visible = True
+                    GetThumbs(PlayerPosition, ThumbCount)
                 Else
                     PlayerPosition = Int(g_Player.CurrentPosition * 1000)
-                    ctlStillImage.Visible = False
+                    imgStillImage.Visible = False
                 End If
             Else
                 If g_Player.Paused = False Then
@@ -412,36 +408,36 @@ Namespace MPVideoRedo5
 #Region "AdDetectiveSubs und Handler"
         Private Sub AdScanStart()
             AddHandler VRD.AdScanStarted, AddressOf AdScanStarted
-            VRD.StartAdScan(True, True, False)
+            VRD.StartAdScan(True, True, True)
         End Sub
 
-        Private Sub AdScanStarted(ByVal sender As Object, ByVal e As AdDetectiveEventArgs)
+        Private Sub AdScanStarted(ByVal sender As Object, ByVal e As EventArgs)
             AddHandler VRD.AdScanAborted, AddressOf AdScanAborted
-            AnimWaiting.Visible = True
-            btnCutMake.Visible = False
-            btnCutSave.Visible = False
-            ctlStillImage.RemoveMemoryImageTexture()
-            ctlStillImage.FileName = GUIGraphicsContext.Skin & "\Media\MPVideoRedo5\MPVideoRedo5Working.png"
-            MoviestripBarUnload()
+            imgAnimWaiting.Visible = True
+            GUIButtonControl.DisableControl(GetID, btnCutMake.GetID)
+            GUIButtonControl.DisableControl(GetID, btnCutSave.GetID)
+            GUIListControl.DisableControl(GetID, lstCutList.GetID)
+            imgStillImage.RemoveMemoryImageTexture()
+            imgStillImage.FileName = GUIGraphicsContext.Skin & "\Media\MPVideoRedo5\MPVideoRedo5Working.png"
         End Sub
 
-        Private Sub AdScanFinished(ByVal sender As Object, ByVal e As AdDetectiveEventArgs)
+        Private Sub AdScanFinished(ByVal sender As Object, ByVal e As EventArgs)
             RemoveHandler VRD.AdScanAborted, AddressOf AdScanAborted
             RemoveHandler VRD.AdScanFinished, AddressOf AdScanFinished
             tmrAdScan.Enabled = False
             RemoveHandler tmrAdScan.Tick, AddressOf AdScanTimer
-            AnimWaiting.Visible = False
+            imgAnimWaiting.Visible = False
+            Logger.DebugM("AdScan has finished!")
             If GUIWindowManager.ActiveWindow = GetID Then
                 CutBarUnload()
                 MoviestripBarUnload()
                 DialogNotify(GetID, 5, Translation.Done, Translation.AdDetectiveDone)
                 CutBar.Text = ""
-                btnCutMake.Visible = True
-                btnCutSave.Visible = True
-                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
-                ctlStillImage.RemoveMemoryImageTexture()
-                ctlStillImage.FileName = Config.GetFolder(Config.Dir.Cache) & "\MPVideoRedo5\StillImage.jpg"
+                GUIButtonControl.EnableControl(GetID, btnCutMake.GetID)
+                GUIButtonControl.EnableControl(GetID, btnCutSave.GetID)
+                GUIListControl.EnableControl(GetID, lstCutList.GetID)
+                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                 Logger.DebugM("Loading detected Scenes ...")
                 SceneLoad(False, True)
                 GUIWindowManager.NeedRefresh()
@@ -454,15 +450,13 @@ Namespace MPVideoRedo5
             End If
         End Sub
 
-        Private Sub AdScanAborted(ByVal sender As Object, ByVal e As AdDetectiveEventArgs)
-            AnimWaiting.Visible = False
-            tmrAdScan.Enabled = False
+        Private Sub AdScanAborted(ByVal sender As Object, ByVal e As EventArgs)
+            RemoveHandler VRD.AdScanFinished, AddressOf AdScanFinished
             RemoveHandler VRD.AdScanAborted, AddressOf AdScanAborted
+            tmrAdScan.Enabled = False
             RemoveHandler tmrAdScan.Tick, AddressOf AdScanTimer
-            CutBar.Text = ""
-            btnCutMake.Visible = True
-            btnCutSave.Visible = True
-            MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
+            imgAnimWaiting.Visible = False
+            Logger.DebugM("AdScan was Aborted!")
         End Sub
 
         Private Sub AdScanTimer(ByVal sender As Object, ByVal e As EventArgs)
@@ -477,7 +471,7 @@ Namespace MPVideoRedo5
 #End Region
 
         Private Sub RecordingLoad()
-            AnimWaiting.Visible = True
+            imgAnimWaiting.Visible = True
             If IO.File.Exists(RecordingToCut.VideoFilename) Then
                 If VRD.AdScanInProgress = False Then
                     If VRD.MediaToCut <> RecordingToCut.VideoFilename Then
@@ -496,28 +490,33 @@ Namespace MPVideoRedo5
                     PlayerFramerate = VRD.GetFramerate
                     PlayerDuration = VRD.VideoDuration
                     SceneLoad(False, True)
-                    If (HelpConfig.GetConfigString(ConfigKey.CutOnPlay) = True) And (CutList.Count = 0) Then
+                    If (HelpConfig.GetConfigString(ConfigKey.CutOnPlay) = True) And (lstCutList.Count = 0) Then
                         Logger.Info("'CutOnPlay' set to 'True' in Preferences. Therefore a first Cutmarker has been generated.")
                         SceneSet(0)
                         Logger.DebugM("The Start-Cutmarker was generated automatically")
                     End If
-                    AnimWaiting.Visible = False
-                    btnCutMake.Visible = True
-                    btnCutSave.Visible = True
+                    imgAnimWaiting.Visible = False
+                    GUIButtonControl.EnableControl(GetID, btnCutMake.GetID)
+                    GUIButtonControl.EnableControl(GetID, btnCutSave.GetID)
+                    GUIListControl.EnableControl(GetID, lstCutList.GetID)
                     GetThumbs(PlayerPosition, ThumbCount)
                     g_Player.Play(RecordingToCut.VideoFilename, g_Player.MediaType.Video)
-                    If (HelpConfig.GetConfigString(ConfigKey.PauseOnStart) = True) Then
+                    If PauseOnStart Then
+                        IsPlayerPaused = True
                         g_Player.Pause()
+                        imgStillImage.Visible = True
+                        PauseOnStart = False
                     End If
-                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
+                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
                 Else
                     SceneLoad(False, False)
-                    AnimWaiting.Visible = True
-                    btnCutMake.Visible = False
-                    btnCutSave.Visible = False
+                    imgAnimWaiting.Visible = True
+                    GUIButtonControl.DisableControl(GetID, btnCutMake.GetID)
+                    GUIButtonControl.DisableControl(GetID, btnCutSave.GetID)
+                    GUIListControl.DisableControl(GetID, lstCutList.GetID)
                 End If
                 CutBar.Text = ""
-                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                 SetPlayerLabels()
             Else
                 Logger.Warn("Error to load the Video {0}", RecordingToCut.VideoFilename)
@@ -535,8 +534,8 @@ Namespace MPVideoRedo5
                     CutBarUnload()
                     MoviestripBarUnload()
                     DialogNotify(GetID, 5, Translation.ErrorOccured, Translation.NoEndmarker)
-                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                    CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                    CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                     Exit Sub
                 Else
                     Logger.DebugM(String.Format("Automatically adding Cutmarker at the end of the movie at Position {0}.", VRD.VideoDuration))
@@ -547,14 +546,14 @@ Namespace MPVideoRedo5
                     SceneSet(PlayerDuration)
                 End If
             End If
-            If CutList.ListItems.Count = 2 Then
-                If CutList.ListItems(0).Label2 = PlayerHelper.GetPlayerTimeString(0, PlayerFramerate) And CutList.ListItems(1).Label2 = GetPlayerTimeString(PlayerDuration, PlayerFramerate) Then
+            If lstCutList.ListItems.Count = 2 Then
+                If lstCutList.ListItems(0).Label2 = PlayerHelper.GetPlayerTimeString(0, PlayerFramerate) And lstCutList.ListItems(1).Label2 = GetPlayerTimeString(PlayerDuration, PlayerFramerate) Then
                     Logger.Warn("Due to setting of automated Start- and End-Cutmarkes, the whole Video was cutted out. This is not permitted.")
                     CutBarUnload()
                     MoviestripBarUnload()
                     DialogNotify(GetID, 5, Translation.ErrorOccured, Translation.ForbiddenCutCompleteVideo)
-                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                    CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                    MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+                    CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
                     Exit Sub
                 End If
             End If
@@ -604,7 +603,7 @@ Namespace MPVideoRedo5
             End If
             If Differ Then
                 VRDList = newVRDList
-                CutList.Clear()
+                lstCutList.Clear()
                 CutBar.CutValues = ""
                 Dim CutType As String = ""
                 For i = 0 To VRDList.Count - 1
@@ -615,7 +614,7 @@ Namespace MPVideoRedo5
                             Logger.DebugM("Missing Thumb was created: {0}", Config.GetFolder(Config.Dir.Cache) & "\MPVideoRedo5\" & VRDList(i) & ".bmp")
                         End If
                     End If
-                    If CutList.ListItems.Count Mod 2 = 0 Then
+                    If lstCutList.ListItems.Count Mod 2 = 0 Then
                         CutType = "Start"
                         TempStartValue = Convert.ToSingle(VRDList(i) * 100 / PlayerDuration)
                     Else
@@ -627,61 +626,63 @@ Namespace MPVideoRedo5
                     lItem.Label = CutType & ": "
                     lItem.Label2 = GetPlayerTimeString(VRDList(i), PlayerFramerate)
                     lItem.IconImage = Config.GetFolder(Config.Dir.Cache) & "\MPVideoRedo5\" & VRDList(i) & ".bmp"
-                    GUIControl.AddListItemControl(GetID, CutList.GetID, lItem)
+                    GUIControl.AddListItemControl(GetID, lstCutList.GetID, lItem)
                 Next i
                 CutBar.Invalidate()
-                GUIPropertyManager.SetProperty("#itemcount", CutList.ListItems.Count)
+                GUIPropertyManager.SetProperty("#itemcount", lstCutList.ListItems.Count)
             End If
 
         End Sub
 
         Private Sub SceneChange()
             If ChangeCutMode = True Then
-                Dim newVRDList As New List(Of Long)
-                ChangeCutMode = False
-                btnCutChange.Visible = False
-                btnCutMake.Visible = True
-                newVRDList = VRD.LoadCutMarkerList()
+                Dim NewMarkerPosition As Long
+                Dim oldVRDList As List(Of Long) = VRD.CutMarkerList()
+                Logger.DebugM("VRDList.Count = {0}", oldVRDList.Count)
                 If IsPlayerPaused Then
-                    newVRDList(ChangeCutModeMarker) = PlayerPosition
+                    NewMarkerPosition = PlayerPosition
                 Else
-                    newVRDList(ChangeCutModeMarker) = g_Player.CurrentPosition * 1000
+                    NewMarkerPosition = g_Player.CurrentPosition * 1000
                 End If
+                Logger.DebugM("Changening Scenemarker '{0}' of '{1}' from {2} ms to {3} ms", ChangeCutModeMarker, oldVRDList.Count, oldVRDList(ChangeCutModeMarker), PlayerPosition)
+                oldVRDList(ChangeCutModeMarker) = NewMarkerPosition
+                Dim newVRDList As New List(Of Long)
+                newVRDList.AddRange(oldVRDList)
+                VRD.CutMarkerList.Clear()
                 VRD.ClearAllSelections()
-                For i = 0 To VRD.CutMarkerList.Count - 1
-                    VRD.AddScene(newVRDList(i))
+                For Each item In newVRDList
+                    VRD.AddScene(item)
                 Next
-                VRDList = newVRDList
                 SceneLoad(False, True)
+                ChangeCutMode = False
+                Translator.SetProperty("#MPVideoRedo5.Translation.MakeCut", Translation.MakeCut)
             End If
         End Sub
 
         Private Sub SceneDelete(ByVal SelectedMarker As Integer)
-            Dim oldCutList As List(Of Long) = VRD.CutMarkerList
+            Dim oldVRDList As List(Of Long) = VRD.CutMarkerList
             If SelectedMarker Mod 2 = 0 Then
-                oldCutList.RemoveAt(SelectedMarker)
+                oldVRDList.RemoveAt(SelectedMarker)
                 Try
-                    oldCutList.RemoveAt(SelectedMarker)
+                    oldVRDList.RemoveAt(SelectedMarker)
                 Catch
                 End Try
             Else
-                oldCutList.RemoveAt(SelectedMarker - 1)
-                oldCutList.RemoveAt(SelectedMarker - 1)
+                oldVRDList.RemoveAt(SelectedMarker - 1)
+                oldVRDList.RemoveAt(SelectedMarker - 1)
             End If
+            Dim newVRDList As New List(Of Long)
+            newVRDList.AddRange(oldVRDList)
+            VRD.CutMarkerList.Clear()
             VRD.ClearAllSelections()
-            CutList.Clear()
-            CutBar.CutValues = ""
-            Dim newCutlist As New List(Of Long)
-            newCutlist.AddRange(oldCutList)
-            For Each item In newCutlist
-                SceneSet(item)
+            For Each item In newVRDList
+                VRD.AddScene(item)
             Next
-            VRD.CutMarkerList = newCutlist
             SceneLoad(False, True)
         End Sub
 
         Private Sub SceneClear()
-            CutList.Clear()
+            lstCutList.Clear()
             CutBar.CutValues = ""
             CutBar.Invalidate()
             VRD.CutMarkerList.Clear()
@@ -715,14 +716,15 @@ Namespace MPVideoRedo5
                         i = i + 1
                         startcut = (line.Split(ControlChars.Tab)(0)) / PlayerFramerate * 1000
                         Logger.DebugM("ComSkipStart ({0}): {1}", i, startcut)
-                        SceneSet(startcut)
+                        VRD.AddScene(startcut)
                         endcut = (line.Split(ControlChars.Tab)(1)) / PlayerFramerate * 1000
                         Logger.DebugM("ComSkipEnd ({0}): {1}", i, endcut)
-                        SceneSet(endcut)
+                        VRD.AddScene(endcut)
                     End If
                 End While
                 r.Close()
                 fs.Close()
+                SceneLoad(False, True)
                 If i = 0 Then
                     DialogNotify(GetID, 5, Translation.LoadComSkipMarkers, Translation.NothingFound)
                     Logger.DebugM("ComSkip File is empty!")
@@ -850,7 +852,7 @@ Namespace MPVideoRedo5
         End Function
 
         Private Sub DialogHelp()
-            HelpBackgroundImage.Visible = True
+            imgHelpBackgroundImage.Visible = True
             Application.DoEvents()
             GUIControl.FocusControl(GetID, btnExitHelp.GetID)
         End Sub
@@ -867,28 +869,30 @@ Namespace MPVideoRedo5
             dlgContext.DoModal(GetID)
             If dlgContext.SelectedLabel = 0 Then
                 If ChangeCutMode = False Then
+                    SkipToMarker(lstCutList.SelectedListItemIndex)
                     ChangeCutMode = True
-                    btnCutMake.Visible = False
-                    btnCutChange.Visible = True
-
+                    Translator.SetProperty("#MPVideoRedo5.Translation.MakeCut", Translation.ChangeCut)
+                    ChangeCutModeMarker = lstCutList.SelectedListItemIndex
                     Logger.DebugM("Internal ChangeCutMode was set to '{0}' for Marker {1}", ChangeCutMode, ChangeCutModeMarker)
                 Else
-
+                    ChangeCutMode = False
+                    Translator.SetProperty("#MPVideoRedo5.Translation.MakeCut", Translation.MakeCut)
+                    Logger.DebugM("Internal ChangeCutMode was set to '{0}'", ChangeCutMode)
                 End If
-                ChangeCutModeMarker = CutList.SelectedListItemIndex
             End If
             If dlgContext.SelectedLabel = 1 Then
-                SceneDelete(CutList.SelectedListItemIndex)
+                ChangeCutMode = False
+                SceneDelete(lstCutList.SelectedListItemIndex)
                 If IsPlayerPaused Then
                     MovieStripBarSceneSet(PlayerPosition)
                     MovieStripBar.Invalidate()
                 End If
             End If
             If dlgContext.SelectedLabel = 2 Then
-                SkipToMarker(CutList.SelectedListItemIndex)
+                SkipToMarker(lstCutList.SelectedListItemIndex)
             End If
-            MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-            CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+            MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
+            CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
             GUIWindowManager.Process()
             dlgContext.Reset()
             dlgContext = Nothing
@@ -899,7 +903,7 @@ Namespace MPVideoRedo5
             If IsPlayerPaused = False Then
                 g_Player.Pause()
             End If
-            sliderAudioSync.Visible = False
+            sldAudioSync.Visible = False
             CutBarUnload()
             MoviestripBarUnload()
             Dim dlgContext As GUIDialogMenu = CType(GUIWindowManager.GetWindow(CType(GUIWindow.Window.WINDOW_DIALOG_MENU, Integer)), GUIDialogMenu)
@@ -955,15 +959,17 @@ Namespace MPVideoRedo5
                 DialogProfile(GetID)
             End If
             If dlgContext.SelectedLabel = 8 Then
-                sliderAudioSync.Visible = True
-                GUIControl.ShowControl(Me.GetID, sliderAudioSync.GetID)
-                GUIControl.FocusControl(Me.GetID, sliderAudioSync.GetID)
-                sliderAudioSync.SetRange(-1000, 1000)
-                sliderAudioSync.IntValue = VRD.AudioSyncValue
+                sldAudioSync.Visible = True
+                GUIControl.ShowControl(GetID, sldAudioSync.GetID)
+                GUIControl.FocusControl(GetID, sldAudioSync.GetID)
+                sldAudioSync.SetRange(-1000, 1000)
+                sldAudioSync.IntValue = VRD.AudioSyncValue
             End If
             If dlgContext.SelectedLabel < 8 Then
-                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), VideoWindow)
-                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), VideoWindow)
+                CutbarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml", True), imgVideoWindow)
+            End If
+            If dlgContext.SelectedLabel > 0 And dlgContext.SelectedLabel < 8 Then
+                MoviestripBarLoad(BarsGetProperties(GUIGraphicsContext.Skin & "\MPVideoRedo5.Main.xml"), imgVideoWindow)
             End If
             GUIWindowManager.Process()
             dlgContext.Reset()
@@ -993,9 +999,10 @@ Namespace MPVideoRedo5
                         skipOnPlay = skipOnPlay - PlayerDuration
                     End If
                 End If
-                If (HelpConfig.GetConfigString(ConfigKey.AlwaysRefreshMoviestripThumbs) = True) Then
+                If AlwaysRefreshMoviestripThumbs Then
                     tmrDelayRefreshOnSkip.Enabled = True
                 End If
+                PlayerPosition = skipOnPlay
                 g_Player.SeekAbsolute(skipOnPlay / 1000)
             End If
         End Sub
@@ -1060,12 +1067,12 @@ Namespace MPVideoRedo5
                 MovieStripBar.MovieThumbs = ThumbList
                 MovieStripBar.LineMarkerPosition = LineMarker
                 'Für ein Vorschaubild welches in  einem Image im Skin verwendet werden kann
-                If g_Player.Paused Or PauseOnStartOnce Then
+                If g_Player.Paused Or PauseOnStart Then
                     Dim ThumbFileName As String = Config.GetFolder(Config.Dir.Cache) & "\MPVideoRedo5\StillImage.jpg"
                     VRD.MakeScreenshotFile(PlayerPosition, ThumbFileName, VideoReDo5.ScreenshotQuality.good)
                     Logger.DebugM("Generating StimllImage for position {0}", _Position)
-                    ctlStillImage.RemoveMemoryImageTexture()
-                    ctlStillImage.FileName = ThumbFileName
+                    imgStillImage.RemoveMemoryImageTexture()
+                    imgStillImage.FileName = ThumbFileName
                 End If
                 MovieStripBarSceneSet(_Position)
                 MovieStripBar.Invalidate()

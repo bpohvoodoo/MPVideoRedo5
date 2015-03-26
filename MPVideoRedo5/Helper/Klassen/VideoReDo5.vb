@@ -7,12 +7,10 @@ Public Class VideoReDo5
     Private VRD As Object
 
     Private SeekStopWatch As Stopwatch
-    'Public IsSeekTimeOverrun As Boolean = False
 
-
-    Public Event AdScanStarted(ByVal sender As Object, ByVal e As AdDetectiveEventArgs)
-    Public Event AdScanFinished(ByVal sender As Object, ByVal e As AdDetectiveEventArgs)
-    Public Event AdScanAborted(ByVal sender As Object, ByVal e As AdDetectiveEventArgs)
+    Public Event AdScanStarted(ByVal sender As Object, ByVal e As EventArgs)
+    Public Event AdScanFinished(ByVal sender As Object, ByVal e As EventArgs)
+    Public Event AdScanAborted(ByVal sender As Object, ByVal e As EventArgs)
     Public Event RecordingSaveStart(ByVal sender As Object, ByVal e As RecordingSaveEventArgs)
     Public Event RecordingSaveProgressCanged(ByVal sender As Object, ByVal e As RecordingSaveEventArgs)
     Public Event RecordingSaveFinished(ByVal sender As Object, ByVal e As RecordingSaveEventArgs)
@@ -101,6 +99,7 @@ Public Class VideoReDo5
 
     Public ReadOnly Property AdScanInProgress() As Boolean
         Get
+            Logger.DebugM("AdScanInProgress: '{0}", VRD.AdScanIsScanning)
             Return VRD.AdScanIsScanning
         End Get
     End Property
@@ -276,7 +275,6 @@ Public Class VideoReDo5
         If SilentMode Then
             Dim VideoReDoSilent = CreateObject("VideoReDo5.VideoReDoSilent")
             VRD = VideoReDoSilent.VRDInterface
-            'VRD.SetQuietMode(True)
             VRD.AdScanSetParameter(2, True)
             mInSilentMode = True
         Else
@@ -285,7 +283,7 @@ Public Class VideoReDo5
             mInSilentMode = False
         End If
         VRDLoaded = True
-        Me.LoggingCOM = True
+        LoggingCOM = True
         Application.DoEvents()
         mRedoVersion = VRD.ProgramGetVersionNumber
         SeekStopWatch = New Stopwatch
@@ -405,10 +403,10 @@ Public Class VideoReDo5
                 Return bmp3
             End If
         Else
-            If Me.SeekToTime(MSek) = True Then
+            If SeekToTime(MSek) = True Then
                 Try
                     If VRD.NavigationCaptureFrame("", Quality) = True Then
-                        Logger.DebugM("Thumbnail of millisecond {0} successfully created. VRD-Position: {1}", MSek.ToString, Me.GetCursorTime)
+                        Logger.DebugM("Thumbnail of millisecond {0} successfully created. VRD-Position: {1}", MSek.ToString, GetCursorTime)
                         Return Clipboard.GetImage()
                     End If
                 Catch excom As Exception
@@ -447,43 +445,35 @@ Public Class VideoReDo5
     Private AbortAdScan As Boolean = False
     Public Sub AbortScan()
         AbortAdScan = True
-        VRD.AdScanToggleScan()
-        'VRD.NavigationPause()
-        'VRD.OutputAbort()
     End Sub
 
     Public Sub StartAdScan(ByVal FastSearch As Boolean, ByVal AutoCut As Boolean, Optional ByVal DisableDisplay As Boolean = True)
-        Dim e As New AdDetectiveEventArgs
-        Me.SeekToTime(0)
-        VRD.AdScanSetParameter(0, FastSearch)
-        VRD.AdScanSetParameter(1, AutoCut)
-        VRD.AdScanSetParameter(2, DisableDisplay)
+        'Dim e As New EventArgs
+        SeekToTime(0)
+        'VRD.AdScanSetParameter(0, FastSearch)
+        'VRD.AdScanSetParameter(1, AutoCut)
+        'VRD.AdScanSetParameter(2, DisableDisplay)
         VRD.AdScanToggleScan()
-        If VRD.AdScanIsScanning = True Then
-            RaiseEvent AdScanStarted(Me, e)
-            Dim LastCutterCount As Integer = 0
-            Do While VRD.AdScanIsScanning
+        If AdScanInProgress = True Then
+            RaiseEvent AdScanStarted(Me, New EventArgs)
+            Do While AdScanInProgress Or AbortAdScan
                 If AbortAdScan Then
-                    RaiseEvent AdScanAborted(Me, New AdDetectiveEventArgs)
+                    VRD.AdScanToggleScan()
                     AbortAdScan = False
+                    RaiseEvent AdScanAborted(Me, New EventArgs)
                     Exit Sub
                 End If
                 Threading.Thread.Sleep(1000)
             Loop
-            RaiseEvent AdScanFinished(Me, e)
+            RaiseEvent AdScanFinished(Me, New EventArgs)
         Else
             Throw New Exception("Error on running 'AdDetective'")
         End If
     End Sub
 
     Private AbortSaving As Boolean = False
-    Public Sub AbortVideoSaving()
+    Public Sub AbortSavingVideo()
         AbortSaving = True
-        VRD.NavigationPause()
-        VRD.OutputAbort()
-        VRD.OUTPUT_STATE = 0
-        VRD.OutputAbort()
-        VRD.OUTPUT_STATE = 0
     End Sub
 
     Public Sub StartVideoSave(ByVal Filename As String)
@@ -491,14 +481,15 @@ Public Class VideoReDo5
             Dim e As New RecordingSaveEventArgs
             RaiseEvent RecordingSaveStart(Me, e)
             Threading.Thread.Sleep(2000)
-            Do While OutputInProgress
+            Do While OutputInProgress Or AbortSaving
                 e.PercentageComplete = VRD.OutputGetPercentComplete
                 RaiseEvent RecordingSaveProgressCanged(Me, e)
                 Threading.Thread.Sleep(500)
                 If AbortSaving = True Then
-                    RaiseEvent RecordingSaveAborted(Me, New RecordingSaveEventArgs)
+                    VRD.OutputAbort()
                     AbortSaving = False
                     e.PercentageComplete = 0
+                    RaiseEvent RecordingSaveAborted(Me, New RecordingSaveEventArgs)
                     Exit Sub
                 End If
             Loop
@@ -514,7 +505,7 @@ Public Class VideoReDo5
     End Sub
 
     Public Function SaveFileAsExt(ByVal Filename As String, Optional ByVal OutputType As VideoSaveFormat = 1) As Boolean
-        If Left(Me.ReDoVersion, 1) = 5 Then
+        If Left(ReDoVersion, 1) = 5 Then
             Dim temp As Object = VRD.FileSaveAs(Filename, SavingProfile)
             If temp IsNot Nothing Then Return True
         End If
@@ -559,7 +550,7 @@ Public Class VideoReDo5
 
     ' IDisposable
     Protected Overridable Sub Dispose(ByVal disposing As Boolean)
-        If Not Me.disposedValue Then
+        If Not disposedValue Then
             If disposing Then
                 ' TODO: Anderen Zustand freigeben (verwaltete Objekte).
 
@@ -570,7 +561,7 @@ Public Class VideoReDo5
             ' TODO: Eigenen Zustand freigeben (nicht verwaltete Objekte).
             ' TODO: Große Felder auf NULL festlegen.
         End If
-        Me.disposedValue = True
+        disposedValue = True
     End Sub
 
     Public Structure VRDProfileInfo
@@ -595,7 +586,7 @@ Public Class VideoReDo5
     Private Sub CheckSeekingInBackground(SeekObject As Object)
         Dim sObj As SeekingObject = DirectCast(SeekObject, SeekingObject)
         Do
-            If VRD IsNot Nothing And Me.GetCursorTime = sObj.SeekTime Then Exit Sub
+            If VRD IsNot Nothing And GetCursorTime = sObj.SeekTime Then Exit Sub
             If DateDiff(DateInterval.Second, sObj.StartTime, Now) > _MaximumSeekTime.TotalSeconds Then
                 Logger.DebugM("SeekStopWatch.ElapsedMilliseconds > MaximumSeekTime.Milliseconds. QuickstreamFix is Needed!!!!")
                 RaiseEvent QuickStreamFixNeeded(Me, New EventArgs())
@@ -637,8 +628,8 @@ Public Class SeekingObject
 
 
     Public Sub New(ToTime As Long, OnBarPosition As Integer)
-        Me.SeekTime = ToTime : Me.BarPosition = OnBarPosition
-        Me.StartTime = Now
+        SeekTime = ToTime : BarPosition = OnBarPosition
+        StartTime = Now
     End Sub
 
     Private _StarTime As DateTime
@@ -676,7 +667,7 @@ End Class
 Public Class SeekingEventArgs
     Inherits EventArgs
     Public Sub New(Stat As enumStatus, ToTime As Long, ToBarPos As Integer)
-        Me.Status = Stat : Me.Msek = ToTime : Me.MovieStripBarPosition = ToBarPos
+        Status = Stat : Msek = ToTime : MovieStripBarPosition = ToBarPos
     End Sub
 
     Private _Status As enumStatus
@@ -716,61 +707,6 @@ Public Class SeekingEventArgs
 
 End Class
 
-Public Class AdDetectiveEventArgs
-    Inherits EventArgs
-
-    Friend Sub New()
-        Me.DetectCutter.Clear()
-    End Sub
-
-    Private mDetectCutter As New List(Of Long)
-    ''' <summary>
-    ''' Gibt die Liste von bis jetzt erkannten Schnittmarken zurück
-    ''' </summary>
-    Public Property DetectCutter() As List(Of Long)
-        Get
-            Return mDetectCutter
-        End Get
-        Set(ByVal value As List(Of Long))
-            mDetectCutter = value
-        End Set
-    End Property
-
-    Public ReadOnly Property LastCutString() As String
-        Get
-            If mDetectCutter.Count Mod 2 = 0 Then
-                Return FormatTime(mDetectCutter(mDetectCutter.Count - 2)) & " - " & FormatTime(mDetectCutter(mDetectCutter.Count - 1))
-            Else
-                Return "Error"
-            End If
-        End Get
-    End Property
-
-    Public ReadOnly Property LastStartCut() As Long
-        Get
-            Return mDetectCutter(mDetectCutter.Count - 2)
-        End Get
-    End Property
-    Public ReadOnly Property LastEndCut() As Long
-        Get
-            Return mDetectCutter(mDetectCutter.Count - 1)
-        End Get
-    End Property
-
-    Public WriteOnly Property CutterAdd() As Long
-        Set(ByVal value As Long)
-            mDetectCutter.Add(value)
-        End Set
-    End Property
-
-    Private Function FormatTime(ByVal lMSec As Long) _
-      As String
-        Dim ts As TimeSpan = TimeSpan.FromMilliseconds(lMSec)
-        Return ts.Hours & ":" & ts.Minutes & ":" & ts.Seconds & "'" & ts.Milliseconds
-    End Function
-
-End Class
-
 Public Class RecordingSaveEventArgs
     Inherits EventArgs
 
@@ -779,7 +715,7 @@ Public Class RecordingSaveEventArgs
 
 
     Public Sub New()
-        Me.PercentageComplete = 0
+        PercentageComplete = 0
         SaveStartTime.Start()
 
     End Sub

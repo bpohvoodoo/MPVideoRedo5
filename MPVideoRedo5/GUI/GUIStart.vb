@@ -17,22 +17,12 @@ Namespace MPVideoRedo5
         Implements ISetupForm
 
 #Region "Skin Controls"
-        <SkinControlAttribute(10)> _
-        Protected ctlRecList As GUIListControl = Nothing
-        <SkinControlAttribute(40)> _
-        Protected ctlEpisodesList As GUIListControl = Nothing
-        <SkinControlAttribute(4)> _
-        Protected ctlCheckUseAsSeries As GUICheckButton = Nothing
-        <SkinControlAttribute(52)> _
-        Protected ctlWaiting As GUIAnimation = Nothing
-        <SkinControlAttribute(51)> _
-        Protected ctlWaitingEpisodes As GUIAnimation = Nothing
-        <SkinControlAttribute(32)> _
-        Protected ctlTextBoxSeriesDescription As GUITextScrollUpControl = Nothing
-        <SkinControlAttribute(21)> _
-        Protected ctlbtnCutVideo As GUIButtonControl = Nothing
-        <SkinControlAttribute(30)> _
-        Protected ctlThumbImg As GUIImage = Nothing
+        <SkinControlAttribute(10)> Protected lstRecList As GUIListControl = Nothing
+        <SkinControlAttribute(40)> Protected lstEpisodesList As GUIListControl = Nothing
+        <SkinControlAttribute(4)> Protected btnCheckUseAsSeries As GUICheckButton = Nothing
+        <SkinControlAttribute(52)> Protected imgWaiting As GUIAnimation = Nothing
+        <SkinControlAttribute(51)> Protected imgWaitingEpisodes As GUIAnimation = Nothing
+        <SkinControlAttribute(21)> Protected btnCutVideo As GUIButtonControl = Nothing
 #End Region
 
 #Region "iSetupFormImplementation"
@@ -96,7 +86,7 @@ Namespace MPVideoRedo5
 
         Public Overloads Overrides Function Init() As Boolean
             'Beim initialisieren des Plugin den Screen laden
-            AddHandler GUIGraphicsContext.form.KeyDown, AddressOf FormKeyDown
+            Translator.TranslateSkin()
             Return Load(GUIGraphicsContext.Skin + "\MPVideoRedo5.Start.xml")
         End Function
 
@@ -110,24 +100,27 @@ Namespace MPVideoRedo5
         Friend AktSerie As TvdbSeries
         'Der Thread für das abrufen der Serieninfos
         Dim trSeries As New Threading.Thread(AddressOf GetSeriesInfosBackground)
+        Dim NothingInProgress As Boolean = True
 #End Region
 
         Protected Overrides Sub OnPageLoad()
             MyBase.OnPageLoad()
-            ctlWaiting.Visible = True
-            ctlEpisodesList.Visible = False
             If Directory.Exists(Config.GetFolder(Config.Dir.Cache) & "\MPVideoRedo5") = False Then
                 Directory.CreateDirectory(Config.GetFolder(Config.Dir.Cache) & "\MPVideoRedo5")
             End If
             GUIWindowManager.NeedRefresh()
             If GUIWindowManager.ActiveWindow = GetID Then
-                'Erstmal irgendwas in die Labels schreiben damit es beim laden nicht so doof aussieht.
+                lstEpisodesList.Visible = False
                 Translator.SetProperty("#RecordingTitle", " ")
                 Translator.SetProperty("#RecordingGenre", " ")
                 Translator.SetProperty("#RecordingEpisodename", " ")
                 'Wird gerade was geschnitten oder läuft der AdScan 
                 If VRD IsNot Nothing Then
-                    GUIButtonControl.DisableControl(GetID, Me.ctlbtnCutVideo.GetID)
+                    GUIButtonControl.DisableControl(GetID, btnCutVideo.GetID)
+                    GUIButtonControl.DisableControl(GetID, btnCheckUseAsSeries.GetID)
+                    GUIListControl.DisableControl(GetID, lstRecList.GetID)
+                    btnCheckUseAsSeries.Selected = False
+                    NothingInProgress = False
                     If VRD.OutputInProgress = True Then
                         If GUIWindowManager.GetPreviousActiveWindow <> enumWindows.GUISave Then 'Wenn geschnitten wird, dann direkt in das ProgressWindow gehen
                             Logger.DebugM("GUIStart: Output in progress. Redirecting...")
@@ -148,12 +141,13 @@ Namespace MPVideoRedo5
                             Exit Sub
                         End If
                     Else
-                        GUIButtonControl.EnableControl(GetID, Me.ctlbtnCutVideo.GetID)
+                        GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
+                        GUIButtonControl.EnableControl(GetID, btnCheckUseAsSeries.GetID)
+                        GUIListControl.EnableControl(GetID, lstRecList.GetID)
+                        NothingInProgress = True
                     End If
                 End If
                 If g_Player.Playing Then g_Player.StopAndKeepTimeShifting() 'Falls ein Stream läuft dann stoppen
-                Translator.TranslateSkin()
-                ctlCheckUseAsSeries.Label = Translation.UseVideoAsSeries
                 RecRootPath = HelpConfig.GetConfigString(ConfigKey.RecordingsPath)
                 If RecRootPath = "" Or IO.Directory.Exists(RecRootPath) = False Then
                     DialogNotify(GetID, 10, Translation.ErrorOccured, Translation.RecordingPathIncorrect)
@@ -161,11 +155,11 @@ Namespace MPVideoRedo5
                     Exit Sub
                 End If
                 FillRecListControl(RecRootPath)
-                If ctlRecList.ListItems.Count > 0 Then
-                    For i As Integer = 0 To ctlRecList.ListItems.Count - 1
-                        If ctlRecList.ListItems(i).IsFolder = False Then
-                            ctlRecList.SelectedListItemIndex = i
-                            SetRecordingsDetails(ctlRecList.SelectedListItem)
+                If lstRecList.ListItems.Count > 0 Then
+                    For i As Integer = 0 To lstRecList.ListItems.Count - 1
+                        If lstRecList.ListItems(i).IsFolder = False Then
+                            lstRecList.SelectedListItemIndex = i
+                            SetRecordingsDetails(lstRecList.SelectedListItem)
                             Exit For
                         End If
                     Next
@@ -175,18 +169,17 @@ Namespace MPVideoRedo5
                     GUIWindowManager.CloseCurrentWindow()
                     Exit Sub
                 End If
-                ctlWaiting.Visible = False
                 If VRD Is Nothing Then
                     'Debugmodus aus oder ein. Je nach dem wird das Fenster von VRD angezeigt oder nicht
                     KillVRD()
                     If HelpConfig.GetConfigString(ConfigKey.DebugVideoRedo) Then
                         VRD = New VideoReDo5(False)
-                        Logger.DebugM("Trying to bring MediaPortal to the foreground...")
-                        Helper.SetMPtoForeground(HelpConfig.GetConfigString(ConfigKey.ModuleName) & " - " & Translation.ModuleStart)
-                        Logger.DebugM("Mediaportal is now in foreground again.")
                     Else
                         VRD = New VideoReDo5(True)
                     End If
+                    Logger.DebugM("Trying to bring MediaPortal to the foreground...")
+                    Helper.SetMPtoForeground(GetModuleName())
+                    Logger.DebugM("Mediaportal is now in foreground again.")
                     AddHandler VRD.QuickStreamFixNeeded, AddressOf QuickStreamFixIsNeeded
                 End If
                 Logger.Info("VideoReDo Version:{0}", VRD.ReDoVersion)
@@ -196,49 +189,55 @@ Namespace MPVideoRedo5
 
         Public Overrides Sub OnAction(ByVal action As MediaPortal.GUI.Library.Action)
             MyBase.OnAction(action)
-            Try
-                If GUIWindowManager.ActiveWindow = GetID Then
-                    If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM Or action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_MOVE_DOWN Or action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_MOVE_UP Then
-                        If ctlRecList.IsFocused Then
-                            RecList_ItemSelected(False)
-                        End If
-                    End If
-                    If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM Then
-                        If ctlEpisodesList.IsFocused Then
-                            EpisodeList_ItemSelected()
-                        End If
-                    End If
+            Dim AktWinId As Integer = GUIWindowManager.ActiveWindow
+            If AktWinId = GetID And NothingInProgress Then
+                Try
+                    Logger.DebugM("Keypress on VideoReDo Screen. KeyChar={0} ; KeyCode={1} ; Actiontype={2}", action.m_key.KeyChar, action.m_key.KeyCode, action.wID.ToString)
+                Catch ex As Exception
+                    Logger.DebugM("Action on VideoReDo Screen. Action={0}", action.wID.ToString)
+                End Try
+                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_KEY_PRESSED Then
+                    If action.m_key IsNot Nothing Then
 
-                    If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_CONTEXT_MENU Then
-                        ' MsgBox("Context")
                     End If
-                    Translator.SetProperty("#RecordingNewFilename", lastSelRecording.SavingFilename)
                 End If
-            Catch ex As Exception
-                Logger.Error(ex)
-            End Try
+                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM Or action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_MOVE_DOWN Or action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_MOVE_UP Then
+                    If lstRecList.IsFocused Then
+                        RecList_ItemSelected(False)
+                    End If
+                End If
+                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_SELECT_ITEM And lstEpisodesList.IsFocused Then
+                    EpisodeList_ItemSelected()
+                End If
 
+                If action.wID = MediaPortal.GUI.Library.Action.ActionType.ACTION_CONTEXT_MENU Then
+                    ' MsgBox("Context")
+                End If
+            End If
         End Sub
 
 
         Protected Overrides Sub OnClicked(ByVal controlId As Integer, ByVal control As MediaPortal.GUI.Library.GUIControl, ByVal actionType As MediaPortal.GUI.Library.Action.ActionType)
             MyBase.OnClicked(controlId, control, actionType)
             '---Recordingliste---
-            If control Is ctlRecList Then
-                RecList_ItemSelected(True)
-            End If
-            '---UseAsSeries Checkbutton---
-            If control Is ctlCheckUseAsSeries Then
-                btnUseAsSeries_Clicked()
-            End If
-            '--- Die Episodenliste---
-            If control Is ctlEpisodesList Then
-                EpisodeList_ItemSelected()
-            End If
-            '--- DerCut-Button ---
-            If control Is ctlbtnCutVideo Then
-                'GUIWindowManager.Clear()
-                RecordingCut()
+            If NothingInProgress Then
+                If control Is lstRecList Then
+                    RecList_ItemSelected(True)
+                End If
+                '---UseAsSeries Checkbutton---
+                If control Is btnCheckUseAsSeries Then
+                    btnUseAsSeries_Clicked()
+                End If
+                '--- Die Episodenliste---
+                If control Is lstEpisodesList Then
+                    EpisodeList_ItemSelected()
+                    lstEpisodesList.Visible = False
+                    GUIControl.FocusControl(GetID, btnCutVideo.GetID)
+                End If
+                '--- DerCut-Button ---
+                If control Is btnCutVideo Then
+                    RecordingCut()
+                End If
             End If
         End Sub
 
@@ -275,7 +274,7 @@ Namespace MPVideoRedo5
         ''' </summary>
         ''' <param name="RecordingPath">Der Pfad der aktuell geladen werden soll</param>
         Private Sub FillRecListControl(ByVal RecordingPath As String)
-            ctlRecList.ListItems.Clear()
+            lstRecList.ListItems.Clear()
             RecList = New clsRecordings(RecordingPath)
             Logger.DebugM("Filling RecordingListcontrol with path {0}", RecordingPath)
             Logger.DebugM("There are {0} recordings to load in this path.", RecList.lRecordings.Count)
@@ -284,26 +283,26 @@ Namespace MPVideoRedo5
             itemcount = 0
             If RecordingPath <> RecRootPath Then
                 Dim lItem As New GUIListItem
-                lItem.ItemId = ctlRecList.ListItems.Count - 1
+                lItem.ItemId = lstRecList.ListItems.Count - 1
                 lItem.Label = ".."
                 lItem.IconImage = "defaultFolderBack.png"
                 lItem.IsFolder = True
                 lItem.Path = Directory.GetParent(RecordingPath).FullName
                 Logger.DebugM("Filling RecordingListcontrol with pathlabel {0} and path: {1}", lItem.Label, lItem.Path)
-                GUIControl.AddListItemControl(GetID, ctlRecList.GetID, lItem)
+                GUIControl.AddListItemControl(GetID, lstRecList.GetID, lItem)
             End If
             'Erst Liste mit Ordnern Füllen
             Try
                 For Each dire In Directory.GetDirectories(RecordingPath)
                     Dim lItem As New GUIListItem
-                    lItem.ItemId = ctlRecList.ListItems.Count - 1
+                    lItem.ItemId = lstRecList.ListItems.Count - 1
                     lItem.Label = Path.GetFileName(dire)
                     lItem.IconImage = "defaultFolder.png"
                     lItem.ThumbnailImage = lItem.IconImage
                     lItem.IsFolder = True
                     lItem.Path = dire
                     Logger.DebugM("Filling RecordingListcontrol with pathlabel {0} and path: {1}", lItem.Label, lItem.Path)
-                    GUIControl.AddListItemControl(GetID, ctlRecList.GetID, lItem)
+                    GUIControl.AddListItemControl(GetID, lstRecList.GetID, lItem)
                     itemcount = itemcount + 1
                 Next
 
@@ -313,7 +312,7 @@ Namespace MPVideoRedo5
                     Dim lItem As New GUIListItem
                     If item.Title <> "" Then
                         lItem.Label = item.Title & " - " & item.Channelname
-                        lItem.ItemId = ctlRecList.ListItems.Count - 1
+                        lItem.ItemId = lstRecList.ListItems.Count - 1
                         If item.Episodename <> "" Then
                             lItem.Label2 = item.Episodename & " - "
                         End If
@@ -323,11 +322,11 @@ Namespace MPVideoRedo5
                         lItem.ThumbnailImage = GetSaveThumbPath(item)
                         lItem.IsFolder = False
                         Logger.DebugM("Filling RecordingListcontrol with file {0} and path: {1}", lItem.Label, lItem.Path)
-                        GUIControl.AddListItemControl(GetID, ctlRecList.GetID, lItem)
+                        GUIControl.AddListItemControl(GetID, lstRecList.GetID, lItem)
                         itemcount = itemcount + 1
                     End If
                 Next
-                ctlRecList.SelectedListItemIndex = 0
+                lstRecList.SelectedListItemIndex = 0
                 RecList_ItemSelected(False)
                 GUIPropertyManager.SetProperty("#itemcount", itemcount)
                 Logger.Info("{0} recordings were loaded to the list.", RecList.lRecordings.Count)
@@ -342,22 +341,23 @@ Namespace MPVideoRedo5
         ''' <param name="Sel"></param>
         ''' <remarks></remarks>
         Private Sub RecList_ItemSelected(ByVal Sel As Boolean)
-            ctlCheckUseAsSeries.Selected = False
-            ctlEpisodesList.Visible = False
-            ctlbtnCutVideo.Visible = False
-            Logger.DebugM("RecordingListControl was clicked")
+            lstEpisodesList.Visible = False
+            GUIButtonControl.DisableControl(GetID, btnCutVideo.GetID)
+            GUIButtonControl.DisableControl(GetID, btnCheckUseAsSeries.GetID)
+            btnCheckUseAsSeries.Selected = False
+            Logger.DebugM("RecordingListControl was selected")
             'Ist es eine Datei oder ein Ordner
 
-            If ctlRecList.SelectedListItem.IsFolder Then
-                Logger.DebugM("Selection is a folder: {0} ; Index:{1}", ctlRecList.SelectedListItem.Label, ctlRecList.SelectedItem)
-                If Sel Then FillRecListControl(ctlRecList.SelectedListItem.Path)
-                SetRecordingsDetails(ctlRecList.SelectedListItem)
+            If lstRecList.SelectedListItem.IsFolder Then
+                Logger.DebugM("Selection is a folder: {0} ; Index:{1}", lstRecList.SelectedListItem.Label, lstRecList.SelectedItem)
+                If Sel Then FillRecListControl(lstRecList.SelectedListItem.Path)
+                SetRecordingsDetails(lstRecList.SelectedListItem)
             Else
-                ctlCheckUseAsSeries.Visible = True
-                ctlbtnCutVideo.Visible = True
-                Logger.DebugM("Selection is a file: {0} ; Index:{1}", ctlRecList.SelectedListItem.Label, ctlRecList.SelectedItem)
-                SetRecordingsDetails(ctlRecList.SelectedListItem)
-                If Sel Then GUIControl.FocusControl(GetID, ctlbtnCutVideo.GetID)
+                GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
+                GUIButtonControl.EnableControl(GetID, btnCheckUseAsSeries.GetID)
+                Logger.DebugM("Selection is a file: {0} ; Index:{1}", lstRecList.SelectedListItem.Label, lstRecList.SelectedItem)
+                SetRecordingsDetails(lstRecList.SelectedListItem)
+                If Sel Then GUIControl.FocusControl(GetID, btnCutVideo.GetID)
             End If
 
         End Sub
@@ -367,21 +367,19 @@ Namespace MPVideoRedo5
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub EpisodeList_ItemSelected()
-            For Each item In ctlEpisodesList.ListItems
+            For Each item In lstEpisodesList.ListItems
                 If item.IconImage <> "" Then
                     item.IconImage = ""
                 End If
             Next
-            ctlEpisodesList.SelectedListItem.IconImage = "MPVideoRedo5\MPVideoRedo5SelectedEpisode.png"
-            AktEpisode = AktSerie.Episodes(ctlEpisodesList.SelectedListItemIndex)
+            lstEpisodesList.SelectedListItem.IconImage = "MPVideoRedo5\MPVideoRedo5SelectedEpisode.png"
+            AktEpisode = AktSerie.Episodes(lstEpisodesList.SelectedListItemIndex)
 
             If AktSerie.Genre.Count > 0 Then lastSelRecording.Genre = AktSerie.Genre(0)
             lastSelRecording.SeriesNum = AktEpisode.SeasonNumber
             lastSelRecording.EpisodeNum = AktEpisode.EpisodeNumber
             lastSelRecording.Episodename = AktEpisode.EpisodeName
             lastSelRecording.Seriesname = AktSerie.SeriesName
-            Translator.SetProperty("#RecordingNewFilename", lastSelRecording.SavingFilename)
-
         End Sub
 
         ''' <summary>
@@ -389,19 +387,19 @@ Namespace MPVideoRedo5
         ''' </summary>
         Private Sub GetSeriesInfosBackground()
             Try
-                Dim SetSerie As TvdbSeries = GetActSeries(GetActRecording(ctlRecList.SelectedListItem.Path))
+                Dim SetSerie As TvdbSeries = GetActSeries(GetActRecording(lstRecList.SelectedListItem.Path))
                 AktSerie = SetSerie
                 If SetSerie IsNot Nothing Then
-                    ctlWaitingEpisodes.Visible = True
-                    ctlEpisodesList.Visible = True
+                    imgWaitingEpisodes.Visible = True
+                    lstEpisodesList.Visible = True
                     FillSeriesSkinProperties(SetSerie)
                 Else
-                    ctlEpisodesList.Visible = False
-                    ctlCheckUseAsSeries.Selected = False
+                    lstEpisodesList.Visible = False
+                    btnCheckUseAsSeries.Selected = False
                 End If
             Catch ex As System.Threading.ThreadAbortException
-                ctlWaitingEpisodes.Visible = False
-                ctlEpisodesList.ListItems.Clear()
+                imgWaitingEpisodes.Visible = False
+                lstEpisodesList.ListItems.Clear()
                 Logger.DebugM("Get Series Background thread ended.")
             End Try
         End Sub
@@ -418,8 +416,9 @@ Namespace MPVideoRedo5
                     Translator.SetProperty("#RecordingGenre", " ")
                     Translator.SetProperty("#RecordingEpisodename", " ")
                     Translator.SetProperty("#RecordingImage", "")
-                    ctlbtnCutVideo.Visible = False
-                    ctlCheckUseAsSeries.Visible = False
+                    GUIButtonControl.DisableControl(GetID, btnCutVideo.GetID)
+                    GUIButtonControl.DisableControl(GetID, btnCheckUseAsSeries.GetID)
+                    btnCheckUseAsSeries.Selected = False
                 Else
                     Dim item As clsRecordings.Recordings = GetActRecording(SelItem.Path)
                     lastSelRecording = item
@@ -428,19 +427,16 @@ Namespace MPVideoRedo5
                     Translator.SetProperty("#RecordingGenre", Translation.Genre & ": " & item.Genre)
 
                     If item.SeriesNum = 0 OrElse item.EpisodeNum = 0 Then
-                        ctlCheckUseAsSeries.Selected = False
+                        btnCheckUseAsSeries.Selected = False
                         Translator.SetProperty("#RecordingEpisodename", Translation.EpisodeTitle & ": " & item.Episodename)
                     Else
                         Dim SeriesNumb As String = "S" & item.SeriesNum.ToString("00") & "E" & item.EpisodeNum.ToString("00")
-                        ctlCheckUseAsSeries.Selected = True
+                        btnCheckUseAsSeries.Selected = True
                         Translator.SetProperty("#RecordingEpisodename", Translation.EpisodeTitle & ": " & item.Episodename & " (" & SeriesNumb & ")")
                     End If
-
-                    Translator.SetProperty("#RecordingNewFilename", Translation.NewFilename & ": " & item.VideoFilename)
                     Translator.SetProperty("#RecordingImage", SelItem.IconImage)
-
-                    ctlbtnCutVideo.Visible = True
-                    ctlCheckUseAsSeries.Visible = True
+                    GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
+                    GUIButtonControl.EnableControl(GetID, btnCheckUseAsSeries.GetID)
                 End If
             Catch ex As Exception
                 Logger.Error("Error in SetRecordingsDetails. Error: {0}", ex.ToString)
@@ -468,9 +464,8 @@ Namespace MPVideoRedo5
                     Logger.DebugM("Series banner does exist - using empty string")
                 End If
                 Translator.SetProperty("#NewSeriesOverview", Serie.Overview)
-                ctlTextBoxSeriesDescription.Label = Serie.Overview
-                ctlEpisodesList.ListItems.Clear()
-                ctlWaitingEpisodes.Visible = True
+                lstEpisodesList.ListItems.Clear()
+                imgWaitingEpisodes.Visible = True
                 Logger.Info("Beginne mit dem Füllen der Episodenliste der Serie {0}. Es sind {1} Episoden vorhanden...", Serie.SeriesName, Serie.Episodes.Count)
                 For Each eps As TvdbEpisode In Serie.Episodes
                     Dim epsLitem As New GUIListItem
@@ -480,14 +475,14 @@ Namespace MPVideoRedo5
 
                     Dim vergleich As New MyStringComparer
 
-                    Logger.Info("Vergleiche Epsisodentitel der Aufnahme ('{0}') mit dem Titel der OnlineEpisode ('{1}')", GetActRecording(ctlRecList.SelectedListItem.Path).Episodename, eps.EpisodeName)
+                    Logger.Info("Vergleiche Epsisodentitel der Aufnahme ('{0}') mit dem Titel der OnlineEpisode ('{1}')", GetActRecording(lstRecList.SelectedListItem.Path).Episodename, eps.EpisodeName)
 
                     Dim VergleichProz As Single = 0
                     Try
-                        If GetActRecording(ctlRecList.SelectedListItem.Path).Episodename.Length < 3 Or eps.EpisodeName.Length < 3 Then
+                        If GetActRecording(lstRecList.SelectedListItem.Path).Episodename.Length < 3 Or eps.EpisodeName.Length < 3 Then
                             VergleichProz = 0
                         Else
-                            VergleichProz = vergleich.IsEqual(GetActRecording(ctlRecList.SelectedListItem.Path).Episodename, eps.EpisodeName)
+                            VergleichProz = vergleich.IsEqual(GetActRecording(lstRecList.SelectedListItem.Path).Episodename, eps.EpisodeName)
                         End If
                     Catch ex As IndexOutOfRangeException
                         VergleichProz = 0
@@ -502,16 +497,16 @@ Namespace MPVideoRedo5
                         Logger.Info("Der Vergleich ergab {0}% und wird somit markiert und die Veriablen werden aktualisiert. Aktuelle Episode: {1}", VergleichProz * 100, eps.EpisodeName)
                         epsLitem.IconImage = "MPVideoRedo5\MPVideoRedo5SelectedEpisode.png"
                         Translator.SetProperty("#NewSeriesName", Serie.SeriesName & " - " & String.Format("S{0}E{1}", eps.SeasonNumber, eps.EpisodeNumber))
-                        selIndex = ctlEpisodesList.ListItems.Count
+                        selIndex = lstEpisodesList.ListItems.Count
                         AktEpisode = eps
                     End If
-                    GUIControl.AddListItemControl(GetID, ctlEpisodesList.GetID, epsLitem)
+                    GUIControl.AddListItemControl(GetID, lstEpisodesList.GetID, epsLitem)
                 Next
-                ctlEpisodesList.SelectedListItemIndex = selIndex
-                ctlEpisodesList.Item(selIndex).Selected = True
-                GUIControl.RefreshControl(GetID, ctlEpisodesList.GetID)
-                ctlWaitingEpisodes.Visible = False
-                GUIControl.FocusControl(GetID, ctlEpisodesList.GetID)
+                lstEpisodesList.SelectedListItemIndex = selIndex
+                lstEpisodesList.Item(selIndex).Selected = True
+                GUIControl.RefreshControl(GetID, lstEpisodesList.GetID)
+                imgWaitingEpisodes.Visible = False
+                GUIControl.FocusControl(GetID, lstEpisodesList.GetID)
                 'ctlEpisodesList.Visible = True
             Catch ex As Exception
                 Logger.Error("Fehler in FillSeriesSkinProperties. Fehler: {0}", ex.ToString)
@@ -540,9 +535,10 @@ Namespace MPVideoRedo5
         ''' </summary>
         Private Function GetActSeries(ByVal AktRec As clsRecordings.Recordings) As TvdbSeries
             Try
+                GUIButtonControl.DisableControl(GetID, btnCutVideo.GetID)
                 Logger.DebugM("GetActSeries() started")
-                ctlEpisodesList.Visible = False
-                ctlWaitingEpisodes.Visible = True
+                lstEpisodesList.Visible = False
+                imgWaitingEpisodes.Visible = True
                 Logger.DebugM("Instanziere the replacer...")
                 Dim Replacer As New clsSeriesReplacer
 
@@ -614,7 +610,7 @@ Namespace MPVideoRedo5
                     Logger.Info("Serie wird direkt abgerufen mit der SeriesID {0}", ReplaceSeriesID)
                     SerieDirekt = TheTVdbHandler.GetSeries(ReplaceSeriesID, myLanguages, True, False, True)
                     Logger.Info("Serie erfolgreich geladen. Serientitel: {0}", SerieDirekt.SeriesName)
-                    ctlEpisodesList.Visible = True
+                    lstEpisodesList.Visible = True
                     Return SerieDirekt
                 Else
                     'Suche nach Serien
@@ -626,7 +622,7 @@ Namespace MPVideoRedo5
                 If listFoundedSeries.Count = 1 Then
                     Logger.Info("Es wurde nur {0} Serien gefunden, verwende diese", listFoundedSeries.Count)
                     Logger.Info("Verwende Serie {0}", listFoundedSeries(0).SeriesName)
-                    ctlEpisodesList.Visible = True
+                    lstEpisodesList.Visible = True
                     Return TheTVdbHandler.GetSeries(listFoundedSeries(0).Id, myLanguages, True, False, True)
                 End If
                 'Es gibt mehrere Ergebnisse
@@ -666,18 +662,25 @@ Namespace MPVideoRedo5
                     SeriesDlg.Add(mItemKeyboard)
                     Logger.DebugM("Menüitem hinzugefügt")
 
-                    ctlWaitingEpisodes.Visible = False
+                    imgWaitingEpisodes.Visible = False
                     Logger.DebugM("Zeige Dialog für Serienauswahl...")
                     SeriesDlg.DoModal(GetID)
-                    ctlWaitingEpisodes.Visible = True
+                    imgWaitingEpisodes.Visible = True
                     Dim selindex As Integer = SeriesDlg.SelectedLabel
                     'Bei abbruch Dialog zeigen
-                    If selindex = -1 Then DialogNotify(GetID, 5, Translation.Abort, Translation.UserAbortDialog) : Return Nothing
+                    If selindex = -1 Then
+                        imgWaitingEpisodes.Visible = False
+                        DialogNotify(GetID, 5, Translation.Abort, Translation.UserAbortDialog)
+                        GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
+                        Return Nothing
+                    End If
                     If selindex = listFoundedSeries.Count Then
                         RecordingToCut.Title = ShowKeyboard(NewSeriesTitle, GetID)
+                        GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
                         Return GetActSeries(RecordingToCut)
                     End If
-                    ctlEpisodesList.Visible = True
+                    lstEpisodesList.Visible = True
+                    GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
                     Return TheTVdbHandler.GetSeries(listFoundedSeries(selindex).Id, myLanguages, True, False, True)
                 Else
                     RecordingToCut.Title = ShowKeyboard(NewSeriesTitle, GetID)
@@ -685,34 +688,32 @@ Namespace MPVideoRedo5
                     If KeySerie Is Nothing Then
                         'KEINE SERIE GEFUNDEN,ABBRUCHDIALOG ZEIGEN
                         DialogNotify(GetID, 5, Translation.NothingFound, Translation.NoSeriesFoundDialog)
-                        ctlEpisodesList.Visible = False
-                        ctlWaitingEpisodes.Visible = False
+                        lstEpisodesList.Visible = False
+                        imgWaitingEpisodes.Visible = False
+                        GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
                         Return Nothing
                     Else
+                        GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
                         Return KeySerie
                     End If
                 End If
             Catch ex As Exception
                 Logger.Error("Error in GetAktSerie() - Error: {0}", ex.ToString)
+                GUIButtonControl.EnableControl(GetID, btnCutVideo.GetID)
                 Return Nothing
             End Try
         End Function
 
-
-        Private Sub FormKeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs)
-            Logger.DebugM("Form KeyDown. Key: {0}", e.KeyCode)
-        End Sub
-
 #Region "btnCutVideo & btnUseAsSeries"
 
         Private Sub btnUseAsSeries_Clicked()
-            If ctlCheckUseAsSeries.Selected Then
-                ctlWaitingEpisodes.Visible = True
-                ctlEpisodesList.ListItems.Clear()
+            If btnCheckUseAsSeries.Selected Then
+                imgWaitingEpisodes.Visible = True
+                lstEpisodesList.ListItems.Clear()
                 'Falls noch ein Thread läuft dann zuerst beenden
                 If trSeries.IsAlive Then
                     trSeries.Abort()
-                    ctlWaitingEpisodes.Visible = False
+                    imgWaitingEpisodes.Visible = False
                     Logger.DebugM("Warte auf beendigung des Backgroudthreads...")
                     Do Until trSeries.IsAlive = False
                         Threading.Thread.Sleep(100)
@@ -724,14 +725,14 @@ Namespace MPVideoRedo5
                 trSeries.Priority = Threading.ThreadPriority.Lowest
                 trSeries.Start()
             Else
-                ctlEpisodesList.Clear()
-                ctlEpisodesList.Visible = False
-                ctlWaitingEpisodes.Visible = False
+                lstEpisodesList.Clear()
+                lstEpisodesList.Visible = False
+                imgWaitingEpisodes.Visible = False
             End If
         End Sub
 
         Private Sub RecordingCut()
-            If ctlCheckUseAsSeries.Selected Then
+            If btnCheckUseAsSeries.Selected Then
                 'es ist eine Serie
                 'lastSelRecording.Genre = AktSerie.Genre(0)
                 'lastSelRecording.SeriesNum = AktEpisode.SeasonNumber
@@ -742,7 +743,7 @@ Namespace MPVideoRedo5
                 RecordingToCut = lastSelRecording
             Else
                 'es ist ein film
-                ctlWaiting.Visible = True
+                imgWaiting.Visible = True
                 lastSelRecording.SavingFilename = ParseSaveVideoFilename(lastSelRecording)
                 RecordingToCut = lastSelRecording
             End If
@@ -770,7 +771,7 @@ Namespace MPVideoRedo5
                 If oldMedia IsNot Nothing Then
                     VRD = New VideoReDo5(False)
                     VRD.LoadMediaToCut(oldMedia, True)
-                    ctlWaiting.Visible = True
+                    imgWaiting.Visible = True
                     lastSelRecording.SavingFilename = ParseSaveVideoFilename(lastSelRecording)
                     RecordingToCut = lastSelRecording
                 End If

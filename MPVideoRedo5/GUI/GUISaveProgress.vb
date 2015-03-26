@@ -61,7 +61,7 @@ Namespace MPVideoRedo5
             isCanceled = False
             If control Is btnCancel Then
                 isCanceled = True
-                VRD.AbortVideoSaving()
+                VRD.AbortSavingVideo()
             ElseIf control Is btnExit Then
                 isCanceled = False
                 PageDestroy()
