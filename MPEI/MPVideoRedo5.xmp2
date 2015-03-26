@@ -525,11 +525,11 @@ Please make sure you have "VideoRedo" installed and you have run it once at Admi
       <Major>0</Major>
       <Minor>9</Minor>
       <Build>5</Build>
-      <Revision>0</Revision>
+      <Revision>1</Revision>
     </Version>
     <ExtensionDescription>With this plugin you are able to cut your recordings with the application VideoRedo from within MediaPortal.
 It is able to cut  frameaccurate.</ExtensionDescription>
-    <VersionDescription>----- Version 9.5.0 -----
+    <VersionDescription>----- Version 9.5.1 -----
 * Portierung zu VideoRedo5
 * hat nun eigene Settingsdatei (mpvideredo5.xml)
 * ComSkip Marker können geladen werden (über AktionsMenu), Sicherheitsfrage in Settings einstellbar
