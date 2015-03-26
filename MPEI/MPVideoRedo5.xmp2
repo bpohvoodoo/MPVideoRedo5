@@ -559,7 +559,7 @@ It is able to cut  frameaccurate.</ExtensionDescription>
 * internen Thumbnailer möglicher Weise gegen ffmpeg tauschen (s.o, mal sehen)
 </VersionDescription>
     <DevelopmentStatus>Alpha</DevelopmentStatus>
-    <OnlineLocation>https://raw.github.com/bpohvoodoo/MPVideoRedo5/master/MPEI/MPVideoRedo5_0.9.5.0.mpe1 </OnlineLocation>
+    <OnlineLocation>https://raw.github.com/bpohvoodoo/MPVideoRedo5/master/MPEI/[Name]_[Version]_[DevelopmentStatus].mpe1 </OnlineLocation>
     <ReleaseDate>2015-03-22T08:25:57</ReleaseDate>
     <Tags>filme,videos,
 cut,
